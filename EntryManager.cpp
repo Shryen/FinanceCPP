@@ -16,6 +16,7 @@ EntryManager::EntryManager(const string& FilePath)
 
 vector<Entry>& EntryManager::ReadEntriesFromFile()
 {
+	Entries.clear();
 	ifstream InputFile(FileName);
 	if (!InputFile)
 		throw::runtime_error("Couldn't open file: " + FileName);
@@ -26,7 +27,8 @@ vector<Entry>& EntryManager::ReadEntriesFromFile()
 		>> ReadEntry.DateofRecord
 		>> ReadEntry.amount
 		>> ReadEntry.Person
-		>> TypeString)
+		>> TypeString
+		>> ReadEntry.OldValue)
 	{
 		ReadEntry.TypeOfEntry = StringToType(TypeString);
 		Entries.push_back(ReadEntry);
@@ -52,9 +54,10 @@ void EntryManager::WriteNewEntryToFile()
 	cout << "Example: [Amount] [Person]\n";
 	cout << "> ";
 	cin >> Amount >> Person;
-	cout << "You put money or take out?\n";
+	cout << "\nYou put money or take out?\n";
 	cout << "[0] Put in\n";
 	cout << "[1] Take out\n";
+	cout << "> ";
 	char Response;
 	cin >> Response;
 	switch (Response) {
@@ -74,10 +77,11 @@ void EntryManager::WriteNewEntryToFile()
 	NewEntry.amount = Amount;
 	NewEntry.Person = Person;
 	NewEntry.TypeOfEntry = TransactionType;
+	NewEntry.OldValue = 0;
 
 	Entries.push_back(NewEntry);
 	PrintEntriesToFile();
-	cout << "New list: \n";
+	cout << "\nNew list: \n";
 	PrintEntries();
 }
 
@@ -87,17 +91,34 @@ void EntryManager::PrintEntries()
 		if (Entries[i].OldValue == 0)
 			cout << "[" << Entries[i].id << "] "
 			<< Entries[i].DateofRecord << " | "
-			<< Entries[i].amount << "€ | "
+			<< "€" << Entries[i].amount << " | "
 			<< Entries[i].Person << " | "
 			<< TypeToString(Entries[i].TypeOfEntry) << '\n';
 		else
 			cout << "[" << Entries[i].id << "] "
 			<< Entries[i].DateofRecord << " | "
-			<< Entries[i].amount << "€ | "
+			<< "€" << Entries[i].amount << " | "
 			<< Entries[i].Person << " | "
-			<< TypeToString(Entries[i].TypeOfEntry) << ' | '
-			<< Entries[i].OldValue << '\n';
+			<< TypeToString(Entries[i].TypeOfEntry) << " | "
+			<< "[Edited from €" << Entries[i].OldValue << "]" << '\n';
 	}
+}
+
+void EntryManager::PrintEntry(int index)
+{
+	if (Entries[index].OldValue == 0)
+		cout << "[" << Entries[index].id << "] "
+		<< Entries[index].DateofRecord << " | "
+		<< Entries[index].amount << "€ | "
+		<< Entries[index].Person << " | "
+		<< TypeToString(Entries[index].TypeOfEntry) << '\n';
+	else
+		cout << "[" << Entries[index].id << "] "
+		<< Entries[index].DateofRecord << " | "
+		<< Entries[index].amount << "€ | "
+		<< Entries[index].Person << " | "
+		<< TypeToString(Entries[index].TypeOfEntry) << " | "
+		<< Entries[index].OldValue << '\n';
 }
 
 void EntryManager::PrintEntriesToFile()
@@ -109,16 +130,76 @@ void EntryManager::PrintEntriesToFile()
 				<< Entries[i].DateofRecord << " "
 				<< Entries[i].amount << " "
 				<< Entries[i].Person << " "
-				<< TypeToString(Entries[i].TypeOfEntry) << '\n';
+				<< TypeToString(Entries[i].TypeOfEntry) << " "
+				<< Entries[i].OldValue << '\n';
 		else
 			FileOutput << Entries[i].id << " "
 			<< Entries[i].DateofRecord << " "
 			<< Entries[i].amount << " "
 			<< Entries[i].Person << " "
-			<< TypeToString(Entries[i].TypeOfEntry) << ' '
+			<< TypeToString(Entries[i].TypeOfEntry) << " "
 			<< Entries[i].OldValue << '\n';
 	}
 }
+
+void EntryManager::EditEntry()
+{
+	PrintEntries();
+	cout << "Enter the ID of the entry you want to edit: ";
+	int Response;
+	cin >> Response;
+	if (Response < 0 || Response >= Entries.size()) {
+		throw::runtime_error("Invalid ID");
+	}
+	int index = Response;
+	cout << "\nSelected : \n";
+	PrintEntry(Response);
+
+	cout << "Are you sure you want to edit this entry? (y / n)\n";
+	char CharResponse;
+	cin >> CharResponse;
+	if (CharResponse == 'y' || CharResponse == 'Y') {
+		cout << "\nWhich field do you want to edit?\n";
+		cout << "[0] Amount\n";
+		cout << "[1] Person\n";
+		cout << "> ";
+		cin >> Response;
+		switch (Response) {
+		case 0:
+			cout << "Enter new amount: ";
+			Entries[index].OldValue = Entries[index].amount;
+			cin >> Entries[index].amount;
+			cout << "Amount changed: \n";
+			PrintEntry(index);
+			break;
+		case 1:
+			cout << "Enter new person: ";
+			cin >> Entries[index].Person;
+			cout << "Person changed: \n";
+			PrintEntry(index);
+			break;
+		default:
+			throw::runtime_error("Invalid option");
+		}
+
+		PrintEntriesToFile();
+	}
+	else {
+		PrintOptions();
+	}
+}
+
+void EntryManager::PrintOptions()
+{
+	cout << "[1] List transactions" << endl;
+	cout << "[2] Write new entry" << endl;
+	cout << "[3] Edit an entry" << endl;
+	cout << "[4] Delete an entry" << endl;
+	cout << "[5] Exit the program" << endl;
+	cout << "[6] Help" << endl;
+	cout << "> ";
+}
+
 
 string EntryManager::TypeToString(type t)
 {

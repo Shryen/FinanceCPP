@@ -16,30 +16,41 @@ int main() {
 			cin.putback(response);
 		}
 	}
+
+	// Hovering over the function will show their description (case of visual studio)
 	Vault.PrintOptions();
+
 	while (true) {
 		cin >> response;
 		cout << '\n';
 		switch (response) {
-		case '0':
+		case '1':
 			Vault.PrintEntries();
 			break;
-		case '1':
+		case '2':
 			Vault.WriteNewEntryToFile();
 			break;
-		case '2':
-			exit(0);
 		case '3':
+			Vault.EditEntry();
+			break;
+		case '4':
+			// DeleteEntry() - implement later
+			cout << "DeleteEntry() not implemented yet.\n";
+			break;
+		case '5':
+			exit(0);
+			break;
+		case '6':
 			Vault.PrintOptions();
 			break;
 		default:
 			cout << "Invalid option. Please try again.\n";
-			Vault.PrintOptions(); 
+			Vault.PrintOptions();
 			break;
 		}
-		
+
 		cout << "> ";
 	}
-	
+
 	return 0;
 }
