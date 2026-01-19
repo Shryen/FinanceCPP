@@ -52,6 +52,18 @@ public:
 	*/
 	void PrintOptions();
 
+	/* 
+		Checks if the user put the right input
+	*/
+	bool CheckInput(char Response, vector<char> Characters);
+
+	/* 
+		Checks for input until a valid character is given then returns it
+	*/
+	char ReadOption(vector<char> ValidChars);
+
+	vector<char> GetValidYesNo() const { return ValidYesNo; }
+
 private:
 	vector<Entry> Entries;
 	string FileName{ "" };
@@ -60,5 +72,7 @@ private:
 	string TypeToString(type t);
 	// convert string to type enum from user input
 	type StringToType(const string& s);
+
+	vector<char> ValidYesNo{ 'y', 'Y', 'n', 'N' };
 };
 

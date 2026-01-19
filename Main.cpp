@@ -6,15 +6,14 @@ int main() {
 	char response;
 	if (Vault.ReadEntriesFromFile().empty()) {
 		cout << "Would you like to create a new transaction ? (y / n)\n";
-		cin >> response;
+		int Tries = 0;
+		
+		response = Vault.ReadOption(Vault.GetValidYesNo());
+
 		if (response == 'y' || response == 'Y')
 			Vault.WriteNewEntryToFile();
 		else if (response == 'n' || response == 'N')
 			exit(0);
-		else {
-			cout << "Invalid response. Try again.\n";
-			cin.putback(response);
-		}
 	}
 
 	// Hovering over the function will show their description (case of visual studio)
@@ -48,8 +47,6 @@ int main() {
 			Vault.PrintOptions();
 			break;
 		}
-
-		cout << "> ";
 	}
 
 	return 0;

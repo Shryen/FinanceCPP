@@ -55,16 +55,18 @@ void EntryManager::WriteNewEntryToFile()
 	cout << "> ";
 	cin >> Amount >> Person;
 	cout << "\nYou put money or take out?\n";
-	cout << "[0] Put in\n";
-	cout << "[1] Take out\n";
-	cout << "> ";
+	cout << "[1] Put in\n";
+	cout << "[2] Take out\n";
 	char Response;
-	cin >> Response;
+
+	vector<char> ValidOptions = { '1', '2' };
+	Response = ReadOption(ValidOptions);
+
 	switch (Response) {
-	case '0':
+	case '1':
 		TransactionType = type::payin;
 		break;
-	case '1':
+	case '2':
 		TransactionType = type::withdraw;
 		break;
 	}
@@ -157,22 +159,24 @@ void EntryManager::EditEntry()
 
 	cout << "Are you sure you want to edit this entry? (y / n)\n";
 	char CharResponse;
-	cin >> CharResponse;
+	CharResponse = ReadOption(ValidYesNo);
 	if (CharResponse == 'y' || CharResponse == 'Y') {
 		cout << "\nWhich field do you want to edit?\n";
-		cout << "[0] Amount\n";
-		cout << "[1] Person\n";
-		cout << "> ";
-		cin >> Response;
-		switch (Response) {
-		case 0:
+		cout << "[1] Amount\n";
+		cout << "[2] Person\n";
+		vector<char> ValidChars = { '1','2' };
+
+		CharResponse = ReadOption(ValidChars);
+
+		switch (CharResponse) {
+		case '1':
 			cout << "Enter new amount: ";
 			Entries[index].OldValue = Entries[index].amount;
 			cin >> Entries[index].amount;
 			cout << "Amount changed: \n";
 			PrintEntry(index);
 			break;
-		case 1:
+		case '2':
 			cout << "Enter new person: ";
 			cin >> Entries[index].Person;
 			cout << "Person changed: \n";
@@ -198,6 +202,30 @@ void EntryManager::PrintOptions()
 	cout << "[5] Exit the program" << endl;
 	cout << "[6] Help" << endl;
 	cout << "> ";
+}
+
+bool EntryManager::CheckInput(char Response, vector<char> Characters)
+{
+	for (int i = 0; i<=Characters.size(); ++i)
+		if (Response == Characters[i])
+			return true;
+
+	return false;
+}
+
+char EntryManager::ReadOption(vector<char> ValidChars)
+{
+	int Tries = 0;
+	char Response{};
+	do {
+		if (Tries > 0)
+			cout << "Invalid response. Try again.\n";
+		cout << "> ";
+		cin >> Response;
+		Tries++;
+	} while (!CheckInput(Response, ValidChars));
+
+	return Response;
 }
 
 
