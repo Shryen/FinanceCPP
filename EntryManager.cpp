@@ -50,7 +50,6 @@ void EntryManager::WriteNewEntryToFile()
 
 	PrintEntries();
 
-
 	cout << '\n';
 
 	do {
@@ -66,7 +65,6 @@ void EntryManager::WriteNewEntryToFile()
 	cout << "Enter your name.\n";
 	cout << "< ";
 	cin >> Person;
-
 
 	cout << "\nYou put money or take out?\n";
 	cout << "[1] Put in\n";
@@ -161,12 +159,20 @@ void EntryManager::PrintEntriesToFile()
 void EntryManager::EditEntry()
 {
 	PrintEntries();
-	cout << "Enter the ID of the entry you want to edit: ";
+	cout << "Enter the ID of the entry you want to edit.\n";
 	int Response;
-	cin >> Response;
-	if (Response < 0 || Response >= Entries.size()) {
-		throw::runtime_error("Invalid ID");
-	}
+	int Tries{ 0 };
+
+	do {
+		if (Tries > 0)
+			cout << "Invalid ID. Try another one!\n";
+
+		cout << "> ";
+		cin >> Response;
+
+		Tries++;
+	} while (Response < 0 || Response >= Entries.size());
+
 	int index = Response;
 	cout << "\nSelected : \n";
 	PrintEntry(Response);
@@ -197,7 +203,7 @@ void EntryManager::EditEntry()
 			PrintEntry(index);
 			break;
 		default:
-			throw::runtime_error("Invalid option");
+			cout << "Invalid option!\n";
 		}
 
 		PrintEntriesToFile();
