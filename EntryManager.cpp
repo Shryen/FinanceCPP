@@ -101,6 +101,7 @@ void EntryManager::WriteNewEntryToFile()
 
 void EntryManager::PrintEntries()
 {
+	cout << '\n';
 	for (int i = 0; i < Entries.size(); ++i) {
 		if (Entries[i].OldValue == 0)
 			cout << "[" << Entries[i].id << "] "
@@ -120,19 +121,21 @@ void EntryManager::PrintEntries()
 
 void EntryManager::PrintEntry(int index)
 {
-	if (Entries[index].OldValue == 0)
-		cout << "[" << Entries[index].id << "] "
-		<< Entries[index].DateofRecord << " | "
-		<< Entries[index].amount << "€ | "
-		<< Entries[index].Person << " | "
-		<< TypeToString(Entries[index].TypeOfEntry) << '\n';
-	else
-		cout << "[" << Entries[index].id << "] "
-		<< Entries[index].DateofRecord << " | "
-		<< Entries[index].amount << "€ | "
-		<< Entries[index].Person << " | "
-		<< TypeToString(Entries[index].TypeOfEntry) << " | "
-		<< Entries[index].OldValue << '\n';
+	cout << '\n';
+	for(int i=0; i<Entries.size(); ++i)
+		if(Entries[i].id == index && Entries[i].OldValue != 0)
+			cout << "[" << Entries[i].id << "] "
+			<< Entries[i].DateofRecord << " | "
+			<< "€" << Entries[i].amount << " | "
+			<< Entries[i].Person << " | "
+			<< TypeToString(Entries[i].TypeOfEntry) << '\n';
+		else if(Entries[i].id == index)
+			cout << "[" << Entries[i].id << "] "
+			<< Entries[i].DateofRecord << " | "
+			<< "€" << Entries[i].amount << " | "
+			<< Entries[i].Person << " | "
+			<< TypeToString(Entries[i].TypeOfEntry) << " | "
+			<< "[Edited from €" << Entries[i].OldValue << "]" << '\n';
 }
 
 void EntryManager::PrintEntriesToFile()
@@ -221,7 +224,6 @@ void EntryManager::PrintOptions()
 	cout << "[4] Delete an entry" << endl;
 	cout << "[5] Exit the program" << endl;
 	cout << "[6] Help" << endl;
-	cout << "> ";
 }
 
 bool EntryManager::CheckInput(char Response, vector<char> Characters)
@@ -275,4 +277,39 @@ bool EntryManager::IsValidAmount(const string& input)
 		if (!isdigit(input[i]))
 			return false;
 	return true;
+}
+
+void EntryManager::DeleteChoice()
+{
+	int Index{};
+	//	- Write options
+	PrintEntries();
+	//	- Prompt user to choose line to delete
+	cout << "Enter the ID of the line you want to delete.\n";
+	cout << "> ";
+	cin >> Index;
+	cout << "User choice: " << Index << "\n";
+	char Response;
+	cout << "\n################";
+	PrintEntry(Index);
+	cout << "################\n";
+	cout << "Are you sure you want to delete this line? (y/n)\n";
+	cout << "> ";
+	Response = ReadOption(GetValidYesNo());
+
+	if (Response == 'y' || Response == 'Y') {
+		DeleteEntry(Index);
+	}
+	else {
+		PrintOptions();
+	}
+}
+
+void EntryManager::DeleteEntry(int index)
+{
+	//	- Get the whole vector rewrite ID's so there's no holes
+	int StartingIndex = Entries[0].id;
+	for (int i = StartingIndex-1; i < Entries.size(); ++i) {
+		
+	}
 }
