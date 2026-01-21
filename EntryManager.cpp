@@ -206,7 +206,7 @@ void EntryManager::PrintOptions()
 
 bool EntryManager::CheckInput(char Response, vector<char> Characters)
 {
-	for (int i = 0; i<=Characters.size(); ++i)
+	for (int i = 0; i<Characters.size(); ++i)
 		if (Response == Characters[i])
 			return true;
 
