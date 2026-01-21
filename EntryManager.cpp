@@ -43,17 +43,31 @@ vector<Entry>& EntryManager::ReadEntriesFromFile()
 void EntryManager::WriteNewEntryToFile()
 {
 	int id{ 0 };
-	double Amount{ 0.0 };
+	int CentAmount{ 0 };
 	string Person{ "" };
 	type TransactionType{};
+	int Tries = 0;
 
 	PrintEntries();
 
+
 	cout << '\n';
-	cout << "Enter data with space between them. \n";
-	cout << "Example: [Amount] [Person]\n";
-	cout << "> ";
-	cin >> Amount >> Person;
+
+	do {
+		if (Tries > 0)
+			cout << "Amount has to be a number and greater than zero.\n\n";
+
+		cout << "Enter amount: ";
+		cin >> CentAmount;
+		Tries++;
+	} while (!IsValidAmount(to_string(CentAmount)));
+
+	cout << '\n';
+	cout << "Enter your name.\n";
+	cout << "< ";
+	cin >> Person;
+
+
 	cout << "\nYou put money or take out?\n";
 	cout << "[1] Put in\n";
 	cout << "[2] Take out\n";
@@ -76,7 +90,7 @@ void EntryManager::WriteNewEntryToFile()
 
 	Entry NewEntry;
 	NewEntry.id = id;
-	NewEntry.amount = Amount;
+	NewEntry.amount = CentAmount;
 	NewEntry.Person = Person;
 	NewEntry.TypeOfEntry = TransactionType;
 	NewEntry.OldValue = 0;
@@ -243,4 +257,16 @@ type EntryManager::StringToType(const string& s)
 	if (s == "payin") return type::payin;
 	if (s == "withdraw") return type::withdraw;
 	throw std::runtime_error("Invalid Type string: " + s);
+}
+
+bool EntryManager::IsValidAmount(const string& input)
+{
+	if (input.empty()) return false;
+
+	if (input.size() == 1 && input[0] == '0') return false;
+
+	for (int i = 0; i < input.length(); ++i)
+		if (!isdigit(input[i]))
+			return false;
+	return true;
 }
