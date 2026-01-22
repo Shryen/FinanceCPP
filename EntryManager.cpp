@@ -58,12 +58,17 @@ void EntryManager::WriteNewEntryToFile()
 
 		cout << "Enter amount: ";
 		cin >> CentAmount;
+		if (cin.fail()) {
+			cin.clear();     
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //discard input
+			CentAmount = -1;
+		}
 		Tries++;
 	} while (!IsValidAmount(to_string(CentAmount)));
 
 	cout << '\n';
 	cout << "Enter your name.\n";
-	cout << "< ";
+	cout << "> ";
 	cin >> Person;
 
 	cout << "\nYou put money or take out?\n";
@@ -97,25 +102,30 @@ void EntryManager::WriteNewEntryToFile()
 	PrintEntriesToFile();
 	cout << "\nNew list: \n";
 	PrintEntries();
+	cout << "\n";
 }
 
 void EntryManager::PrintEntries()
 {
-	cout << '\n';
-	for (int i = 0; i < Entries.size(); ++i) {
-		if (Entries[i].OldValue == 0)
-			cout << "[" << Entries[i].id << "] "
-			<< Entries[i].DateofRecord << " | "
-			<< "€" << Entries[i].amount << " | "
-			<< Entries[i].Person << " | "
-			<< TypeToString(Entries[i].TypeOfEntry) << '\n';
-		else
-			cout << "[" << Entries[i].id << "] "
-			<< Entries[i].DateofRecord << " | "
-			<< "€" << Entries[i].amount << " | "
-			<< Entries[i].Person << " | "
-			<< TypeToString(Entries[i].TypeOfEntry) << " | "
-			<< "[Edited from €" << Entries[i].OldValue << "]" << '\n';
+	if (Entries.size() == 0) cout << "No records found yet, create new one!\n";
+	else {
+		cout << '\n';
+		for (int i = 0; i < Entries.size(); ++i) {
+			if (Entries[i].OldValue == 0)
+				cout << "[" << Entries[i].id << "] "
+				<< Entries[i].DateofRecord << " | "
+				<< "€" << Entries[i].amount << " | "
+				<< Entries[i].Person << " | "
+				<< TypeToString(Entries[i].TypeOfEntry) << '\n';
+			else
+				cout << "[" << Entries[i].id << "] "
+				<< Entries[i].DateofRecord << " | "
+				<< "€" << Entries[i].amount << " | "
+				<< Entries[i].Person << " | "
+				<< TypeToString(Entries[i].TypeOfEntry) << " | "
+				<< "[Edited from €" << Entries[i].OldValue << "]" << '\n';
+		}
+		cout << '\n';
 	}
 }
 
@@ -309,7 +319,15 @@ void EntryManager::DeleteEntry(int index)
 {
 	//	- Get the whole vector rewrite ID's so there's no holes
 	int StartingIndex = Entries[0].id;
-	for (int i = StartingIndex-1; i < Entries.size(); ++i) {
-		
+	for (int i = 0; i < Entries.size(); ++i) {
+		if (Entries[i].id == index) {
+			Entries.erase(Entries.begin()+i);
+			break;
+		}
 	}
+
+	for (int i = 0; i < Entries.size(); ++i) 
+		Entries[i].id = i;
+	
+	PrintEntriesToFile();
 }

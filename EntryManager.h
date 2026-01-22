@@ -13,7 +13,7 @@ enum class type {
 struct Entry {
 	int id{0};
 	Date DateofRecord = Date();
-	double amount{ 0.0 };
+	int amount{ 0 };
 	string Person{ "" };
 	type TypeOfEntry{ type::payin };
 	double OldValue{ 0.0 };
@@ -63,6 +63,10 @@ public:
 	char ReadOption(vector<char> ValidChars);
 
 	vector<char> GetValidYesNo() const { return ValidYesNo; }
+	bool IsValidAmount(const string& input);
+
+	void DeleteChoice();
+	void DeleteEntry(int index);
 
 private:
 	vector<Entry> Entries;
@@ -74,5 +78,6 @@ private:
 	type StringToType(const string& s);
 
 	vector<char> ValidYesNo{ 'y', 'Y', 'n', 'N' };
+
 };
 

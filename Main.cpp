@@ -20,8 +20,8 @@ int main() {
 	Vault.PrintOptions();
 
 	while (true) {
+		cout << "> ";
 		cin >> response;
-		cout << '\n';
 		switch (response) {
 		case '1':
 			Vault.PrintEntries();
@@ -33,8 +33,7 @@ int main() {
 			Vault.EditEntry();
 			break;
 		case '4':
-			// DeleteEntry() - implement later
-			cout << "DeleteEntry() not implemented yet.\n";
+			Vault.DeleteChoice();
 			break;
 		case '5':
 			exit(0);
