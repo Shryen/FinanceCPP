@@ -1,8 +1,9 @@
 #include "EntryManager.h"
+#include "CurrencyManager.h"
 
 int main() {
-
-	EntryManager Vault{ "vault.data" };
+	CurrencyManager CurrencyMgr;
+	EntryManager Vault{ "vault.data", &CurrencyMgr };
 	char response;
 	if (Vault.ReadEntriesFromFile().empty()) {
 		cout << "Would you like to create a new transaction ? (y / n)\n";
@@ -17,7 +18,7 @@ int main() {
 	}
 
 	// Hovering over the function will show their description (case of visual studio)
-	Vault.PrintOptions();
+	Vault.PrintMenu();
 
 	while (true) {
 		cout << "> ";
@@ -39,11 +40,14 @@ int main() {
 			exit(0);
 			break;
 		case '6':
-			Vault.PrintOptions();
+			Vault.PrintSummary();
+			break;
+		case '7':
+			Vault.PrintMenu();
 			break;
 		default:
 			cout << "Invalid option. Please try again.\n";
-			Vault.PrintOptions();
+			Vault.PrintMenu();
 			break;
 		}
 	}

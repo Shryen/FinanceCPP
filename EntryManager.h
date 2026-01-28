@@ -3,26 +3,15 @@
 #include "Date.h"
 #include <vector>
 #include <fstream>
+#include "Entry.h"
 using namespace std;
 
-enum class type {
-	payin,
-	withdraw
-};
-
-struct Entry {
-	int id{0};
-	Date DateofRecord = Date();
-	int amount{ 0 };
-	string Person{ "" };
-	type TypeOfEntry{ type::payin };
-	double OldValue{ 0.0 };
-};
+class CurrencyManager;
 
 class EntryManager
 {
 public:
-	EntryManager(const string& FilePath);
+	EntryManager(const string& FilePath, CurrencyManager* CurrencyMgr = nullptr);
 
 	/*
 	 Reads entries from file and stores them in the Entries vector
@@ -38,6 +27,7 @@ public:
 	*/
 	void WriteNewEntryToFile();
 	void PrintEntries();
+	vector<Entry> GetEntries() const { return Entries; }
 	void PrintEntry(int Index);
 	void PrintEntriesToFile();
 	void EditEntry();
@@ -50,8 +40,8 @@ public:
 		5. Exit the program
 		6. Print options again
 	*/
-	void PrintOptions();
-
+	void PrintMenu();
+	void PrintSummary();
 	/* 
 		Checks if the user put the right input
 	*/
@@ -78,6 +68,8 @@ private:
 	type StringToType(const string& s);
 
 	vector<char> ValidYesNo{ 'y', 'Y', 'n', 'N' };
+
+	CurrencyManager* Currency{ nullptr };
 
 };
 
