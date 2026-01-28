@@ -116,21 +116,24 @@ void EntryManager::PrintEntries()
 	if (Entries.size() == 0) cout << "No records found yet, create new one!\n";
 	else {
 		cout << '\n';
+		cout << "ID\t| Date\t\t| Amount\t| Person\t| Type\n";
+		cout << string(65, '-') << '\n';
 		for (int i = 0; i < Entries.size(); ++i) {
 			double EuroAmount = Currency->ConvertToEuros(Entries[i].amount);
+			double OldEuroAmount = Currency->ConvertToEuros(Entries[i].OldValue);
 			if (Entries[i].OldValue == 0)
-				cout << "[" << Entries[i].id << "] "
-				<< Entries[i].DateofRecord << " | "
-				<< "€" << EuroAmount << "\t | "
-				<< Entries[i].Person << " | "
+				cout << "[" << Entries[i].id << "]\t| "
+				<< Entries[i].DateofRecord << "\t| "
+				<< "€" << EuroAmount << "\t\t| "
+				<< Entries[i].Person << "\t\t| "
 				<< TypeToString(Entries[i].TypeOfEntry) << '\n';
 			else
-				cout << "[" << Entries[i].id << "] "
-				<< Entries[i].DateofRecord << " | "
-				<< "€" << EuroAmount << " | "
-				<< Entries[i].Person << " | "
-				<< TypeToString(Entries[i].TypeOfEntry) << " | "
-				<< "[Edited from €" << Entries[i].OldValue << "]" << '\n';
+				cout << "[" << Entries[i].id << "]\t| "
+				<< Entries[i].DateofRecord << "\t| "
+				<< "€" << EuroAmount << "\t\t| "
+				<< Entries[i].Person << "\t\t| "
+				<< TypeToString(Entries[i].TypeOfEntry) << "\t | "
+				<< "[Edited from €" << OldEuroAmount << "]" << '\n';
 		}
 		cout << '\n';
 	}
@@ -139,20 +142,25 @@ void EntryManager::PrintEntries()
 void EntryManager::PrintEntry(int index)
 {
 	cout << '\n';
-	for(int i=0; i<Entries.size(); ++i)
-		if(Entries[i].id == index && Entries[i].OldValue != 0)
-			cout << "[" << Entries[i].id << "] "
-			<< Entries[i].DateofRecord << " | "
-			<< "€" << Entries[i].amount << " | "
-			<< Entries[i].Person << " | "
+	cout << "ID\t| Date\t\t| Amount\t| Person\t| Type\n";
+	cout << string(65, '-') << '\n';
+	for(int i=0; i<Entries.size(); ++i){
+		double EuroAmount = Currency->ConvertToEuros(Entries[i].amount);
+		double OldEuroAmount = Currency->ConvertToEuros(Entries[i].OldValue);
+		if (Entries[i].id == index && Entries[i].OldValue != 0)
+			cout << "[" << Entries[i].id << "]\t| "
+			<< Entries[i].DateofRecord << "\t| "
+			<< "€" << EuroAmount << "\t\t| "
+			<< Entries[i].Person << "\t\t| "
 			<< TypeToString(Entries[i].TypeOfEntry) << '\n';
 		else if(Entries[i].id == index)
 			cout << "[" << Entries[i].id << "] "
 			<< Entries[i].DateofRecord << " | "
-			<< "€" << Entries[i].amount << " | "
+			<< "€" << EuroAmount << " | "
 			<< Entries[i].Person << " | "
 			<< TypeToString(Entries[i].TypeOfEntry) << " | "
-			<< "[Edited from €" << Entries[i].OldValue << "]" << '\n';
+			<< "[Edited from €" << OldEuroAmount << "]" << '\n';
+	}
 }
 
 void EntryManager::PrintEntriesToFile()
@@ -194,10 +202,10 @@ void EntryManager::EditEntry()
 	} while (Response < 0 || Response >= Entries.size());
 
 	int index = Response;
-	cout << "\nSelected : \n";
+	cout << "\nSelected: ";
 	PrintEntry(index);
 
-	cout << "Are you sure you want to edit this entry? (y / n)\n";
+	cout << "\nAre you sure you want to edit this entry? (y / n)\n";
 	char CharResponse;
 	CharResponse = ReadOption(ValidYesNo);
 	if (CharResponse == 'y' || CharResponse == 'Y') {
@@ -212,7 +220,9 @@ void EntryManager::EditEntry()
 		case '1':
 			cout << "Enter new amount: ";
 			Entries[index].OldValue = Entries[index].amount;
-			cin >> Entries[index].amount;
+			double EuroAmount;
+			cin >> EuroAmount;
+			Entries[index].amount = Currency->ConvertToCents(EuroAmount);
 			cout << "Amount changed: \n";
 			PrintEntry(index);
 			break;
@@ -320,15 +330,13 @@ void EntryManager::DeleteChoice()
 	cout << "Enter the ID of the line you want to delete.\n";
 	cout << "> ";
 	cin >> Index;
-	cout << "User choice: " << Index << "\n";
+	cout << '\n';
+	cout << "User choice: " << Index;
 	char Response;
-	cout << "\n################";
 	PrintEntry(Index);
-	cout << "################\n";
-	cout << "Are you sure you want to delete this line? (y/n)\n";
-	cout << "> ";
-	Response = ReadOption(GetValidYesNo());
+	cout << "\nAre you sure you want to delete this line? (y/n)\n";
 
+	Response = ReadOption(GetValidYesNo());
 	if (Response == 'y' || Response == 'Y') {
 		DeleteEntry(Index);
 	}
