@@ -12,6 +12,7 @@ Date::Date()
 	year = SystemTime.wYear;
 	month = SystemTime.wMonth;
 	day = SystemTime.wDay;
+	Emonth = static_cast<Month>(month);
 }
 
 Date::Date(int y, Month m, int d) : year(y), Emonth(m), day(d)

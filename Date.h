@@ -19,7 +19,7 @@ public:
 	class Invalid {};
 	Date();
 	Date(int y, Month m, int d);
-	int GetEMonth() const { return int(month); }
+	int GetEMonth() const { return int(Emonth); }
 	int GetMonth() const { return month; }
 	int GetDay() const { return day; }
 	int GetYear() const { return year; }
