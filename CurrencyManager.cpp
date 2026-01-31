@@ -1,19 +1,7 @@
 #include "CurrencyManager.h"
 
-int CurrencyManager::ConvertToCents(double euros)
-{
-	return euros * 100;
-}
-
-double CurrencyManager::ConvertToEuros(int cents)
-{
-    // TODO: Seperate euros and cents and if cents over 100 add to euros
-	EuroOutput = cents / 100.0;
-	return EuroOutput;
-}
-
-double CurrencyManager::Summarize(std::vector<Entry> Entries) {
-    double sum{ 0.0 };
+Currency CurrencyManager::Summarize(std::vector<Entry> Entries) {
+    Currency sum{ "0.0" };
 
     for (const Entry& Entry : Entries) {
         if (Entry.TypeOfEntry == type::payin) 
@@ -22,28 +10,34 @@ double CurrencyManager::Summarize(std::vector<Entry> Entries) {
             sum -= Entry.amount;
     }
 
-    EuroOutput = sum / 100.0;
+    EuroOutput = sum;
     return EuroOutput;
 }
 
-double CurrencyManager::GetWithdrawnAmount(std::vector<Entry> Entries)
+
+Currency CurrencyManager::GetWithdrawnAmount(std::vector<Entry> Entries)
 {
-    int totalWithdrawn{ 0 };
+    Currency totalWithdrawn{ "0" };
 
     for (const Entry& Entry : Entries) 
         if (Entry.TypeOfEntry == type::withdraw)
             totalWithdrawn += Entry.amount;
  
-	return ConvertToEuros(totalWithdrawn);
+	return totalWithdrawn;
 }
 
-double CurrencyManager::GetPayedInAmount(std::vector<Entry> Entries)
+Currency CurrencyManager::GetPayedInAmount(std::vector<Entry> Entries)
 {
-    int TotalPayedIn{ 0 };
+    Currency TotalPayedIn{ "0" };
 
     for (const Entry& Entry : Entries) 
         if(Entry.TypeOfEntry == type::payin)
 			TotalPayedIn += Entry.amount;
 
-    return ConvertToEuros(TotalPayedIn);
+    return TotalPayedIn;
+}
+
+bool CurrencyManager::IsValidAmount(Currency& Input)
+{
+    return !Input.Empty() && Input.GetAmount()>0;
 }

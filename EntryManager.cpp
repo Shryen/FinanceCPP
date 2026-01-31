@@ -15,7 +15,7 @@ EntryManager::EntryManager(const string& FilePath, CurrencyManager* CurrencyMgr)
 		OutFile.close();
 	}
 
-	Currency = CurrencyMgr;
+	this->CurrencyMgr = CurrencyMgr;
 }
 
 vector<Entry>& EntryManager::ReadEntriesFromFile()
@@ -47,7 +47,7 @@ vector<Entry>& EntryManager::ReadEntriesFromFile()
 void EntryManager::WriteNewEntryToFile()
 {
 	int id{ 1 };
-	double EuroAmount{ 0 };
+	Currency EuroAmount{ "0" };
 	string Person{ "" };
 	type TransactionType{};
 	int Tries = 0;
@@ -68,7 +68,7 @@ void EntryManager::WriteNewEntryToFile()
 			EuroAmount = -1;
 		}
 		Tries++;
-	} while (!IsValidAmount(to_string(EuroAmount)));
+	} while (!CurrencyMgr->IsValidAmount(EuroAmount));
 
 	cout << '\n';
 	cout << "Enter your name.\n";
@@ -95,11 +95,9 @@ void EntryManager::WriteNewEntryToFile()
 	if (!Entries.empty())
 		id = Entries.back().id + 1;
 
-	int CentAmount = Currency->ConvertToCents(EuroAmount);
-
 	Entry NewEntry;
 	NewEntry.id = id;
-	NewEntry.amount = CentAmount;
+	NewEntry.amount = EuroAmount;
 	NewEntry.Person = Person;
 	NewEntry.TypeOfEntry = TransactionType;
 	NewEntry.OldValue = 0;
@@ -119,8 +117,9 @@ void EntryManager::PrintEntries()
 		cout << "ID\t| Date\t\t| Amount\t| Person\t| Type\n";
 		cout << string(65, '-') << '\n';
 		for (int i = 0; i < Entries.size(); ++i) {
-			double EuroAmount = Currency->ConvertToEuros(Entries[i].amount);
-			double OldEuroAmount = Currency->ConvertToEuros(Entries[i].OldValue);
+			Currency EuroAmount = Entries[i].amount;
+			Currency OldEuroAmount = Entries[i].OldValue;
+			
 			if (Entries[i].OldValue == 0)
 				cout << "[" << Entries[i].id << "]\t| "
 				<< Entries[i].DateofRecord << "\t| "
@@ -145,12 +144,12 @@ void EntryManager::PrintEntry(int index)
 	cout << "ID\t| Date\t\t| Amount\t| Person\t| Type\n";
 	cout << string(65, '-') << '\n';
 	for(int i=0; i<Entries.size(); ++i){
-		double EuroAmount = Currency->ConvertToEuros(Entries[i].amount);
-		double OldEuroAmount = Currency->ConvertToEuros(Entries[i].OldValue);
+		Currency EuroAmount = Entries[i].amount;
+		Currency OldEuroAmount = Entries[i].OldValue;
 		if (Entries[i].id == index && Entries[i].OldValue != 0)
 			cout << "[" << Entries[i].id << "]\t| "
 			<< Entries[i].DateofRecord << "\t| "
-			<< "€" << EuroAmount << "\t\t| "
+			<< "€" << EuroAmount << "\t| "
 			<< Entries[i].Person << "\t\t| "
 			<< TypeToString(Entries[i].TypeOfEntry) << '\n';
 		else if(Entries[i].id == index)
@@ -170,17 +169,17 @@ void EntryManager::PrintEntriesToFile()
 		if (Entries[i].OldValue == 0) 
 			FileOutput << Entries[i].id << " "
 				<< Entries[i].DateofRecord << " "
-				<< Entries[i].amount << " "
+				<< Entries[i].amount.GetAmount() << " "
 				<< Entries[i].Person << " "
 				<< TypeToString(Entries[i].TypeOfEntry) << " "
 				<< Entries[i].OldValue << '\n';
 		else
 			FileOutput << Entries[i].id << " "
 			<< Entries[i].DateofRecord << " "
-			<< Entries[i].amount << " "
+			<< Entries[i].amount.GetAmount() << " "
 			<< Entries[i].Person << " "
 			<< TypeToString(Entries[i].TypeOfEntry) << " "
-			<< Entries[i].OldValue << '\n';
+			<< Entries[i].OldValue.GetAmount() << '\n';
 	}
 }
 
@@ -218,19 +217,23 @@ void EntryManager::EditEntry()
 
 		switch (CharResponse) {
 		case '1':
+		{
 			cout << "Enter new amount: ";
 			Entries[index].OldValue = Entries[index].amount;
-			double EuroAmount;
+			Currency EuroAmount{ "0" };
 			cin >> EuroAmount;
-			Entries[index].amount = Currency->ConvertToCents(EuroAmount);
+			Entries[index].amount = EuroAmount;
 			cout << "Amount changed: \n";
 			PrintEntry(index);
+		}
 			break;
 		case '2':
+		{
 			cout << "Enter new person: ";
 			cin >> Entries[index].Person;
 			cout << "Person changed: \n";
 			PrintEntry(index);
+		}
 			break;
 		default:
 			cout << "Invalid option!\n";
@@ -258,9 +261,9 @@ void EntryManager::PrintMenu()
 void EntryManager::PrintSummary()
 {
 	cout << "\nSummary of all transactions: \n";
-	cout << "Withdrawals:\t " << Currency->GetWithdrawnAmount(Entries) << endl;
-	cout << "Pay-ins:\t " << Currency->GetPayedInAmount(Entries) << endl;
-	cout << "Total balance:\t " << Currency->Summarize(Entries) << endl << endl;
+	cout << "Withdrawals:\t " << CurrencyMgr->GetWithdrawnAmount(Entries) << endl;
+	cout << "Pay-ins:\t " << CurrencyMgr->GetPayedInAmount(Entries) << endl;
+	cout << "Total balance:\t " << CurrencyMgr->Summarize(Entries) << endl << endl;
 }
 
 bool EntryManager::CheckInput(char Response, vector<char> Characters)
@@ -302,23 +305,6 @@ type EntryManager::StringToType(const string& s)
 	if (s == "payin") return type::payin;
 	if (s == "withdraw") return type::withdraw;
 	throw std::runtime_error("Invalid Type string: " + s);
-}
-
-bool EntryManager::IsValidAmount(const string& input)
-{
-	if (input.empty()) return false;
-
-	if (input.size() == 1 && input[0] == '0') return false;
-
-	string newInput = input;
-
-	for (int i = 0; i < newInput.length(); ++i){
-		if(newInput[i] == ',' || newInput[i] == '.')
-			newInput.erase(i, 1);
-		if (!isdigit(newInput[i]))
-			return false;
-	}
-	return true;
 }
 
 void EntryManager::DeleteChoice()

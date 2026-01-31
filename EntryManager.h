@@ -53,7 +53,6 @@ public:
 	char ReadOption(vector<char> ValidChars);
 
 	vector<char> GetValidYesNo() const { return ValidYesNo; }
-	bool IsValidAmount(const string& input);
 
 	void DeleteChoice();
 	void DeleteEntry(int index);
@@ -69,7 +68,7 @@ private:
 
 	vector<char> ValidYesNo{ 'y', 'Y', 'n', 'N' };
 
-	CurrencyManager* Currency{ nullptr };
+	CurrencyManager* CurrencyMgr{ nullptr };
 
 };
 

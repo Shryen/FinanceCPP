@@ -5,6 +5,7 @@ int main() {
 	CurrencyManager CurrencyMgr;
 	EntryManager Vault{ "vault.data", &CurrencyMgr };
 	char response;
+
 	if (Vault.ReadEntriesFromFile().empty()) {
 		cout << "Would you like to create a new transaction ? (y / n)\n";
 		int Tries = 0;

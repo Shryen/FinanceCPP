@@ -6,15 +6,11 @@
 class CurrencyManager
 {
 public:
-	int ConvertToCents(double euros);
-	double ConvertToEuros(int cents);
-	double GetEuroOutput() { return EuroOutput; };
-
-	double Summarize(std::vector<Entry> Entries);
-	double GetWithdrawnAmount(std::vector<Entry> Entries);
-	double GetPayedInAmount(std::vector<Entry> Entries);
-
+	Currency Summarize(std::vector<Entry> Entries);
+	Currency GetWithdrawnAmount(std::vector<Entry> Entries);
+	Currency GetPayedInAmount(std::vector<Entry> Entries);
+	bool IsValidAmount(Currency& Input);
 private:
-	double EuroOutput{ 0.0 };
+	Currency EuroOutput{ "0.0" };
 };
 
