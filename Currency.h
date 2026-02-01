@@ -19,16 +19,16 @@ public:
 
 	// Operator Overloads START #####
 	Currency operator+(const Currency& other) const {
-		return Currency(Amount + other.Amount);
+		return Currency(std::to_string(Amount + other.Amount));
 	}
 	Currency operator-(const Currency& other) const {
-		return Currency(Amount - other.Amount);
+		return Currency(std::to_string(Amount - other.Amount));
 	}
 	Currency operator*(float multiplier) const {
-		return Currency(Amount * multiplier);
+		return Currency(std::to_string(Amount * multiplier));
 	}
 	Currency operator/(float divisor) const {
-		return Currency(Amount / divisor);
+		return Currency(std::to_string(Amount / divisor));
 	}
 
 	Currency& operator+=(const Currency& other) {
@@ -81,6 +81,7 @@ inline std::istream& operator>>(std::istream& is, Currency& CurrencyObj) {
 		CurrencyObj = temporary;
 	}
 	catch (const std::exception& e) {
+		std::cerr << "Error reading currency: " << e.what() << std::endl;
 		is.setstate(std::ios::failbit);
 	}
 	return is;

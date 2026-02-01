@@ -1,96 +1,31 @@
 ﻿#include "EntryManager.h"
 #include "CurrencyManager.h"
+#include "FileController.h"
 
 
-EntryManager::EntryManager(const string& FilePath, CurrencyManager* CurrencyMgr)
+EntryManager::EntryManager(FileController* FileController, CurrencyManager* CurrencyMgr)
 {
-	if (FilePath.empty())
-		throw::runtime_error("Invalid FilePath");
-
-	FileName = FilePath;
-	ifstream Readfile{ FileName };
-	if (!Readfile) {
-		ofstream OutFile(FileName);
-		OutFile.open(FileName);
-		OutFile.close();
-	}
-
+	this->FileControllerPtr = FileController;
 	this->CurrencyMgr = CurrencyMgr;
-}
 
-vector<Entry>& EntryManager::ReadEntriesFromFile()
-{
-	Entries.clear();
-	ifstream InputFile(FileName);
-	if (!InputFile)
-		throw::runtime_error("Couldn't open file: " + FileName);
-
-	Entry ReadEntry;
-	string TypeString;
-	while (InputFile >> ReadEntry.id
-		>> ReadEntry.DateofRecord
-		>> ReadEntry.amount
-		>> ReadEntry.Person
-		>> TypeString
-		>> ReadEntry.OldValue)
-	{
-		ReadEntry.TypeOfEntry = StringToType(TypeString);
-		Entries.push_back(ReadEntry);
-	}
-
-	if (Entries.empty())
-		cout << "File is empty.\n";
-
-	return Entries;
+	FileControllerPtr->ReadEntriesFromFile(Entries);
 }
 
 void EntryManager::WriteNewEntryToFile()
 {
 	int id{ 1 };
 	Currency EuroAmount{ "0" };
-	string Person{ "" };
+	std::string Person{ "" };
 	type TransactionType{};
-	int Tries = 0;
 
 	PrintEntries();
+	std::cout << '\n';
 
-	cout << '\n';
+	TryToGetAmount(EuroAmount, "Amount has to be a number and greater than zero.");
 
-	do {
-		if (Tries > 0)
-			cout << "Amount has to be a number and greater than zero.\n\n";
-
-		cout << "Enter amount: ";
-		cin >> EuroAmount;
-		if (cin.fail()) {
-			cin.clear();     
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //discard input
-			EuroAmount = -1;
-		}
-		Tries++;
-	} while (!CurrencyMgr->IsValidAmount(EuroAmount));
-
-	cout << '\n';
-	cout << "Enter your name.\n";
-	cout << "> ";
-	cin >> Person;
-
-	cout << "\nYou put money or take out?\n";
-	cout << "[1] Put in\n";
-	cout << "[2] Take out\n";
-	char Response;
-
-	vector<char> ValidOptions = { '1', '2' };
-	Response = ReadOption(ValidOptions);
-
-	switch (Response) {
-	case '1':
-		TransactionType = type::payin;
-		break;
-	case '2':
-		TransactionType = type::withdraw;
-		break;
-	}
+	GetUserName(Person);
+	char Response{'0'};
+	TransactionType = GetTypeFromUser(Response);
 
 	if (!Entries.empty())
 		id = Entries.back().id + 1;
@@ -103,143 +38,169 @@ void EntryManager::WriteNewEntryToFile()
 	NewEntry.OldValue = 0;
 
 	Entries.push_back(NewEntry);
-	PrintEntriesToFile();
-	cout << "\nNew list: \n";
+	FileControllerPtr->WriteEntriesToFile(Entries);
+	std::cout << "\nNew list: \n";
 	PrintEntries();
-	cout << "\n";
+	std::cout << "\n";
 }
+
+type EntryManager::GetTypeFromUser(char Response) {
+	std::cout << "\nYou put money or take out?\n";
+	std::cout << "[1] Put in\n";
+	std::cout << "[2] Take out\n";
+	std::vector<char> ValidOptions = { '1', '2' };
+	Response = ReadOption(ValidOptions);
+	switch (Response) {
+	case'1':
+		return type::payin;
+	case '2':
+		return type::withdraw;
+	default:
+		std::cout << "Invalid option, defaulting to payin.\n";
+		return type::payin;
+	}
+}
+
+std::string EntryManager::GetUserName(std::string& Name)
+{
+	std::cout << '\n';
+	std::cout << "Enter your name.\n";
+	std::cout << "> ";
+	std::cin >> Name;
+	return Name;
+}
+
+Currency EntryManager::TryToGetAmount(Currency& Amount, std::string ErrorMessage)
+{
+	int Tries = 0;
+	do {
+		if (Tries > 0)
+			std::cout << ErrorMessage << "\n\n";
+
+		std::cout << "Enter amount: ";
+		std::cin >> Amount;
+		if (std::cin.fail()) {
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //discard input
+			Amount = -1;
+		}
+		Tries++;
+	} while (!CurrencyMgr->IsValidAmount(Amount));
+
+	return Amount;
+}
+
 
 void EntryManager::PrintEntries()
 {
-	if (Entries.size() == 0) cout << "No records found yet, create new one!\n";
+	if (Entries.size() == 0) std::cout << "No records found yet, create new one!\n";
 	else {
-		cout << '\n';
-		cout << "ID\t| Date\t\t| Amount\t| Person\t| Type\n";
-		cout << string(65, '-') << '\n';
+		std::cout << '\n';
+		std::cout << "ID\t| Date\t\t| Amount\t| Person\t| Type\n";
+		std::cout << std::string(65, '-') << '\n';
 		for (int i = 0; i < Entries.size(); ++i) {
 			Currency EuroAmount = Entries[i].amount;
 			Currency OldEuroAmount = Entries[i].OldValue;
 			
 			if (Entries[i].OldValue == 0)
-				cout << "[" << Entries[i].id << "]\t| "
+				std::cout << "[" << Entries[i].id << "]\t| "
 				<< Entries[i].DateofRecord << "\t| "
 				<< "€" << EuroAmount << "\t\t| "
 				<< Entries[i].Person << "\t\t| "
-				<< TypeToString(Entries[i].TypeOfEntry) << '\n';
+				<< FileControllerPtr->TypeToString(Entries[i].TypeOfEntry) << '\n';
 			else
-				cout << "[" << Entries[i].id << "]\t| "
+				std::cout << "[" << Entries[i].id << "]\t| "
 				<< Entries[i].DateofRecord << "\t| "
 				<< "€" << EuroAmount << "\t\t| "
 				<< Entries[i].Person << "\t\t| "
-				<< TypeToString(Entries[i].TypeOfEntry) << "\t | "
+				<< FileControllerPtr->TypeToString(Entries[i].TypeOfEntry) << "\t | "
 				<< "[Edited from €" << OldEuroAmount << "]" << '\n';
 		}
-		cout << '\n';
+		std::cout << '\n';
 	}
 }
 
 void EntryManager::PrintEntry(int index)
 {
-	cout << '\n';
-	cout << "ID\t| Date\t\t| Amount\t| Person\t| Type\n";
-	cout << string(65, '-') << '\n';
+	std::cout << '\n';
+	std::cout << "ID\t| Date\t\t| Amount\t| Person\t| Type\n";
+	std::cout << std::string(65, '-') << '\n';
 	for(int i=0; i<Entries.size(); ++i){
 		Currency EuroAmount = Entries[i].amount;
 		Currency OldEuroAmount = Entries[i].OldValue;
 		if (Entries[i].id == index && Entries[i].OldValue != 0)
-			cout << "[" << Entries[i].id << "]\t| "
+			std::cout << "[" << Entries[i].id << "]\t| "
 			<< Entries[i].DateofRecord << "\t| "
 			<< "€" << EuroAmount << "\t| "
 			<< Entries[i].Person << "\t\t| "
-			<< TypeToString(Entries[i].TypeOfEntry) << '\n';
+			<< FileControllerPtr->TypeToString(Entries[i].TypeOfEntry) << '\n';
 		else if(Entries[i].id == index)
-			cout << "[" << Entries[i].id << "] "
+			std::cout << "[" << Entries[i].id << "] "
 			<< Entries[i].DateofRecord << " | "
 			<< "€" << EuroAmount << " | "
 			<< Entries[i].Person << " | "
-			<< TypeToString(Entries[i].TypeOfEntry) << " | "
+			<< FileControllerPtr->TypeToString(Entries[i].TypeOfEntry) << " | "
 			<< "[Edited from €" << OldEuroAmount << "]" << '\n';
-	}
-}
-
-void EntryManager::PrintEntriesToFile()
-{
-	ofstream FileOutput(FileName);
-	for (int i = 0; i < Entries.size(); ++i) {
-		if (Entries[i].OldValue == 0) 
-			FileOutput << Entries[i].id << " "
-				<< Entries[i].DateofRecord << " "
-				<< Entries[i].amount.GetAmount() << " "
-				<< Entries[i].Person << " "
-				<< TypeToString(Entries[i].TypeOfEntry) << " "
-				<< Entries[i].OldValue << '\n';
-		else
-			FileOutput << Entries[i].id << " "
-			<< Entries[i].DateofRecord << " "
-			<< Entries[i].amount.GetAmount() << " "
-			<< Entries[i].Person << " "
-			<< TypeToString(Entries[i].TypeOfEntry) << " "
-			<< Entries[i].OldValue.GetAmount() << '\n';
 	}
 }
 
 void EntryManager::EditEntry()
 {
 	PrintEntries();
-	cout << "Enter the ID of the entry you want to edit.\n";
+	std::cout << "Enter the ID of the entry you want to edit.\n";
 	int Response;
 	int Tries{ 0 };
 
 	do {
 		if (Tries > 0)
-			cout << "Invalid ID. Try another one!\n";
+			std::cout << "Invalid ID. Try another one!\n";
 
-		cout << "> ";
-		cin >> Response;
+		std::cout << "> ";
+		std::cin >> Response;
 
 		Tries++;
 	} while (Response < 0 || Response >= Entries.size());
 
 	int index = Response;
-	cout << "\nSelected: ";
+	std::cout << "\nSelected: ";
 	PrintEntry(index);
 
-	cout << "\nAre you sure you want to edit this entry? (y / n)\n";
+	std::cout << "\nAre you sure you want to edit this entry? (y / n)\n";
 	char CharResponse;
 	CharResponse = ReadOption(ValidYesNo);
 	if (CharResponse == 'y' || CharResponse == 'Y') {
-		cout << "\nWhich field do you want to edit?\n";
-		cout << "[1] Amount\n";
-		cout << "[2] Person\n";
-		vector<char> ValidChars = { '1','2' };
+		std::cout << "\nWhich field do you want to edit?\n";
+		std::cout << "[1] Amount\n";
+		std::cout << "[2] Person\n";
+		std::vector<char> ValidChars = { '1','2' };
 
 		CharResponse = ReadOption(ValidChars);
 
 		switch (CharResponse) {
 		case '1':
 		{
-			cout << "Enter new amount: ";
+			std::cout << "Enter new amount: ";
 			Entries[index].OldValue = Entries[index].amount;
 			Currency EuroAmount{ "0" };
-			cin >> EuroAmount;
+			std::cin >> EuroAmount;
 			Entries[index].amount = EuroAmount;
-			cout << "Amount changed: \n";
+			std::cout << "Amount changed: \n";
 			PrintEntry(index);
 		}
 			break;
 		case '2':
 		{
-			cout << "Enter new person: ";
-			cin >> Entries[index].Person;
-			cout << "Person changed: \n";
+			std::cout << "Enter new person: ";
+			std::cin >> Entries[index].Person;
+			std::cout << "Person changed: \n";
 			PrintEntry(index);
 		}
 			break;
 		default:
-			cout << "Invalid option!\n";
+			std::cout << "Invalid option!\n";
 		}
 
-		PrintEntriesToFile();
+		FileControllerPtr->WriteEntriesToFile(Entries);
 	}
 	else {
 		PrintMenu();
@@ -248,25 +209,25 @@ void EntryManager::EditEntry()
 
 void EntryManager::PrintMenu()
 {
-	cout << "\tMenu \n";
-	cout << "[1] List transactions" << endl;
-	cout << "[2] Write new entry" << endl;
-	cout << "[3] Edit an entry" << endl;
-	cout << "[4] Delete an entry" << endl;
-	cout << "[5] Exit the program" << endl;
-	cout << "[6] Summary" << endl;
-	cout << "[7] Help" << endl;
+	std::cout << "\tMenu \n";
+	std::cout << "[1] List transactions" << std::endl;
+	std::cout << "[2] Write new entry" << std::endl;
+	std::cout << "[3] Edit an entry" << std::endl;
+	std::cout << "[4] Delete an entry" << std::endl;
+	std::cout << "[5] Exit the program" << std::endl;
+	std::cout << "[6] Summary" << std::endl;
+	std::cout << "[7] Help" << std::endl;
 }
 
 void EntryManager::PrintSummary()
 {
-	cout << "\nSummary of all transactions: \n";
-	cout << "Withdrawals:\t " << CurrencyMgr->GetWithdrawnAmount(Entries) << endl;
-	cout << "Pay-ins:\t " << CurrencyMgr->GetPayedInAmount(Entries) << endl;
-	cout << "Total balance:\t " << CurrencyMgr->Summarize(Entries) << endl << endl;
+	std::cout << "\nSummary of all transactions: \n";
+	std::cout << "Withdrawals:\t " << CurrencyMgr->GetWithdrawnAmount(Entries) << std::endl;
+	std::cout << "Pay-ins:\t " << CurrencyMgr->GetPayedInAmount(Entries) << std::endl;
+	std::cout << "Total balance:\t " << CurrencyMgr->Summarize(Entries) << std::endl << std::endl;
 }
 
-bool EntryManager::CheckInput(char Response, vector<char> Characters)
+bool EntryManager::CheckInput(char Response, std::vector<char> Characters)
 {
 	for (int i = 0; i<Characters.size(); ++i)
 		if (Response == Characters[i])
@@ -275,15 +236,15 @@ bool EntryManager::CheckInput(char Response, vector<char> Characters)
 	return false;
 }
 
-char EntryManager::ReadOption(vector<char> ValidChars)
+char EntryManager::ReadOption(std::vector<char> ValidChars)
 {
 	int Tries = 0;
 	char Response{};
 	do {
 		if (Tries > 0)
-			cout << "Invalid response. Try again.\n";
-		cout << "> ";
-		cin >> Response;
+			std::cout << "Invalid response. Try again.\n";
+		std::cout << "> ";
+		std::cin >> Response;
 		Tries++;
 	} while (!CheckInput(Response, ValidChars));
 
@@ -291,36 +252,20 @@ char EntryManager::ReadOption(vector<char> ValidChars)
 }
 
 
-string EntryManager::TypeToString(type t)
-{
-	switch (t) {
-	case type::payin: return "payin";
-	case type::withdraw: return "withdraw";
-	}
-	throw logic_error("Invalid type");
-}
-
-type EntryManager::StringToType(const string& s)
-{
-	if (s == "payin") return type::payin;
-	if (s == "withdraw") return type::withdraw;
-	throw std::runtime_error("Invalid Type string: " + s);
-}
-
 void EntryManager::DeleteChoice()
 {
 	int Index{};
 	//	- Write options
 	PrintEntries();
 	//	- Prompt user to choose line to delete
-	cout << "Enter the ID of the line you want to delete.\n";
-	cout << "> ";
-	cin >> Index;
-	cout << '\n';
-	cout << "User choice: " << Index;
+	std::cout << "Enter the ID of the line you want to delete.\n";
+	std::cout << "> ";
+	std::cin >> Index;
+	std::cout << '\n';
+	std::cout << "User choice: " << Index;
 	char Response;
 	PrintEntry(Index);
-	cout << "\nAre you sure you want to delete this line? (y/n)\n";
+	std::cout << "\nAre you sure you want to delete this line? (y/n)\n";
 
 	Response = ReadOption(GetValidYesNo());
 	if (Response == 'y' || Response == 'Y') {
@@ -345,5 +290,10 @@ void EntryManager::DeleteEntry(int index)
 	for (int i = 0; i < Entries.size(); ++i) 
 		Entries[i].id = i;
 	
-	PrintEntriesToFile();
+	FileControllerPtr->WriteEntriesToFile(Entries);
+}
+
+bool EntryManager::IsEmpty() const
+{
+	return Entries.empty();
 }

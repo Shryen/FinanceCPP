@@ -1,13 +1,14 @@
 #include "EntryManager.h"
 #include "CurrencyManager.h"
+#include "FileController.h"
 
 int main() {
 	CurrencyManager CurrencyMgr;
-	EntryManager Vault{ "vault.data", &CurrencyMgr };
+	FileController Filecontroller{"vault.data"};
+	EntryManager Vault{ &Filecontroller, &CurrencyMgr };
 	char response;
-
-	if (Vault.ReadEntriesFromFile().empty()) {
-		cout << "Would you like to create a new transaction ? (y / n)\n";
+	if (Filecontroller.IsFileEmpty()) {
+		std::cout << "Would you like to create a new transaction ? (y / n)\n";
 		int Tries = 0;
 		
 		response = Vault.ReadOption(Vault.GetValidYesNo());
@@ -22,8 +23,8 @@ int main() {
 	Vault.PrintMenu();
 
 	while (true) {
-		cout << "> ";
-		cin >> response;
+		std::cout << "> ";
+		std::cin >> response;
 		switch (response) {
 		case '1':
 			Vault.PrintEntries();
@@ -47,7 +48,7 @@ int main() {
 			Vault.PrintMenu();
 			break;
 		default:
-			cout << "Invalid option. Please try again.\n";
+			std::cout << "Invalid option. Please try again.\n";
 			Vault.PrintMenu();
 			break;
 		}
