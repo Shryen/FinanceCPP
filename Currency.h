@@ -62,7 +62,7 @@ public:
 	// Operator Overloads END #####
 
 private:
-	int Amount{ 0 };
+	long long Amount{ 0 };
 };
 
 

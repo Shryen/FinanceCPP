@@ -21,7 +21,7 @@ public:
 	*/
 	void WriteNewEntryToFile();
 	void PrintEntries();
-	std::vector<Entry> GetEntries() { return Entries; }
+	const std::vector<Entry>& GetEntries() { return Entries; }
 	void PrintEntry(int Index);
 	void EditEntry();
 

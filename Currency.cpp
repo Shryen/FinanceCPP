@@ -31,7 +31,7 @@ Currency::Currency(std::string Amount)
 		Cent = Cent % 100;
 	}
 	if (Cent == 0) 
-		Result = Euro;
+		Result = Euro * 100;
 	else
 		Result = Euro * 100 + Cent;
 	

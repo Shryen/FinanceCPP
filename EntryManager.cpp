@@ -99,8 +99,8 @@ void EntryManager::PrintEntries()
 		std::cout << "ID\t| Date\t\t| Amount\t| Person\t| Type\n";
 		std::cout << std::string(65, '-') << '\n';
 		for (int i = 0; i < Entries.size(); ++i) {
-			Currency EuroAmount = Entries[i].amount;
-			Currency OldEuroAmount = Entries[i].OldValue;
+			Currency EuroAmount = Entries[i].amount.ToEuros();
+			Currency OldEuroAmount = Entries[i].OldValue.ToEuros();
 			
 			if (Entries[i].OldValue == 0)
 				std::cout << "[" << Entries[i].id << "]\t| "
@@ -126,8 +126,8 @@ void EntryManager::PrintEntry(int index)
 	std::cout << "ID\t| Date\t\t| Amount\t| Person\t| Type\n";
 	std::cout << std::string(65, '-') << '\n';
 	for(int i=0; i<Entries.size(); ++i){
-		Currency EuroAmount = Entries[i].amount;
-		Currency OldEuroAmount = Entries[i].OldValue;
+		Currency EuroAmount = Entries[i].amount.ToEuros();
+		Currency OldEuroAmount = Entries[i].OldValue.ToEuros();
 		if (Entries[i].id == index && Entries[i].OldValue != 0)
 			std::cout << "[" << Entries[i].id << "]\t| "
 			<< Entries[i].DateofRecord << "\t| "
