@@ -2,22 +2,26 @@
 build/
 cmake-build-*/
 out/
+x64/
 
 # CMake
-CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
 Makefile
 *.cmake
+CMakePresets.json
+CMakeUserPresets.json
 
 # Visual Studio
 .vs/
 *.sln
+*.slnx
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
 *.suo
 *.user
+*.qtvscr
 
 # Compiled files
 *.exe
@@ -43,3 +47,7 @@ qrc_*.cpp
 # OS
 .DS_Store
 Thumbs.db
+
+# Project specific
+vault.data
+Vault/
