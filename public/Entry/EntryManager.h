@@ -4,6 +4,7 @@
 #include <vector>
 #include <fstream>
 #include "Entry.h"
+#include "QString"
 
 class CurrencyManager;
 class FileController;
@@ -53,6 +54,9 @@ public:
 
 	bool IsEmpty() const;
 
+	void SetUserName(const QString& Name);
+	QString GetUserName() const { return Name; }
+
 private:
 	std::vector<Entry> Entries;
 
@@ -62,8 +66,9 @@ private:
 	FileController* FileControllerPtr{ nullptr };
 
 	type GetTypeFromUser(char Response);
-	std::string GetUserName(std::string& Name);
 
 	Currency TryToGetAmount(Currency& Amount, std::string ErrorMessage);
+
+	QString Name;
 };
 

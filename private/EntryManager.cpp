@@ -23,7 +23,6 @@ void EntryManager::WriteNewEntryToFile()
 
 	TryToGetAmount(EuroAmount, "Amount has to be a number and greater than zero.");
 
-	GetUserName(Person);
 	char Response{'0'};
 	TransactionType = GetTypeFromUser(Response);
 
@@ -59,15 +58,6 @@ type EntryManager::GetTypeFromUser(char Response) {
 		std::cout << "Invalid option, defaulting to payin.\n";
 		return type::payin;
 	}
-}
-
-std::string EntryManager::GetUserName(std::string& Name)
-{
-	std::cout << '\n';
-	std::cout << "Enter your name.\n";
-	std::cout << "> ";
-	std::cin >> Name;
-	return Name;
 }
 
 Currency EntryManager::TryToGetAmount(Currency& Amount, std::string ErrorMessage)
@@ -296,4 +286,9 @@ void EntryManager::DeleteEntry(int index)
 bool EntryManager::IsEmpty() const
 {
 	return Entries.empty();
+}
+
+void EntryManager::SetUserName(const QString& Name)
+{
+	this->Name = Name;
 }
