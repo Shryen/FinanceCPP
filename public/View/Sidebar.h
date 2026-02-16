@@ -17,6 +17,8 @@ public:
 	void SetWithdrawalAmount(const QString& Amount);
 	void SetDepositAmount(const QString& Amount);
 	void SetTotalAmount(const QString& Amount);
+
+	void ShowSidebarContent();
 private:
 	QLabel* TitleLabel;
 	MenuLabel* CurrentUserLabel;

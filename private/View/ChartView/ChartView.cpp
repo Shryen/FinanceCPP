@@ -48,7 +48,11 @@ void ChartView::UpdateChartData(const QVector<Entry>& Entries)
         XDate.setDate(QDate{ year, month, day });
         XDate.setTime(QTime{ hour, minute, second });
         Currency Amount = entry.amount;
-        YSum += Amount.ToEuros()/100;
+        if (entry.TypeOfEntry == type::withdraw) 
+			YSum -= Amount.ToEuros() / 100;
+		else if (entry.TypeOfEntry == type::payin)
+            YSum += Amount.ToEuros() / 100;
+
         qDebug() << YSum;
         Series->append(XDate.toMSecsSinceEpoch(), YSum);
     }

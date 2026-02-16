@@ -35,11 +35,24 @@ void Sidebar::SetTotalAmount(const QString& Amount)
 	TotalCurrencyLabel->setText("Net Total: €" + Amount);
 }
 
+void Sidebar::ShowSidebarContent()
+{
+	WithdrawalCurrencyLabel->show();
+	DepositCurrencyLabel->show();
+	TotalCurrencyLabel->show();
+	AddEntryButton->show();
+	EditEntryButton->show();
+	DeleteEntryButton->show();
+}
+
 void Sidebar::SetupButtons()
 {
 	AddEntryButton = new MenuButton("Add Entry", this);
 	EditEntryButton = new MenuButton("Edit Entry", this);
 	DeleteEntryButton = new MenuButton("Delete Entry", this);
+	AddEntryButton->hide();
+	EditEntryButton->hide();
+	DeleteEntryButton->hide();
 
 	//connect(ViewEntriesButton, &QPushButton::clicked, this, &Sidebar::OnViewEntriesClicked);
 }
@@ -60,9 +73,9 @@ void Sidebar::SetupTitleLabel()
 
 void Sidebar::SetupCurrentUserLabel()
 {
-	CurrentUserLabel = new MenuLabel("");
+	CurrentUserLabel = new MenuLabel("Please select your name!");
 	CurrentUserLabel->setAlignment(Qt::AlignCenter);
-	CurrentUserLabel->setStyleSheet("font-size: 24px; margin-bottom: 20px; font-style: bold;");
+	CurrentUserLabel->setStyleSheet("font-size: 24px; margin-bottom: 20px; font-weight: bold;");
 }
 
 void Sidebar::SetupCurrencyLabels()
@@ -70,6 +83,9 @@ void Sidebar::SetupCurrencyLabels()
 	WithdrawalCurrencyLabel = new MenuLabel("Total Withdrawals: €0.00");
 	DepositCurrencyLabel = new MenuLabel("Total Deposits: €0.00");
 	TotalCurrencyLabel = new MenuLabel("Net Total: €0.00");
+	WithdrawalCurrencyLabel->hide();
+	DepositCurrencyLabel->hide();
+	TotalCurrencyLabel->hide();
 }
 
 void Sidebar::AddWidgetsToLayout()

@@ -25,6 +25,7 @@ void MainPresenter::HandleLogin(const QString& CurrentUser)
 
     Sidebar* sideBar = mainWindow->GetSidebar();
     sideBar->SetCurrentUser(CurrentUser);
+	sideBar->ShowSidebarContent();
 	QStackedWidget* contentStack = mainWindow->GetContentStack();
 	contentStack->setCurrentWidget(mainWindow->GetChartView());
 	RefreshChart();

@@ -4,5 +4,6 @@ MenuLabel::MenuLabel(QString Text, QWidget* parent) : QLabel(parent), Text(Text)
 {
 	this->setText(Text);
 	this->setAlignment(Qt::AlignCenter);
-	this->setStyleSheet("font-size: 24px; font-weight: bold; margin-bottom: 10px;");
+	this->setStyleSheet("font-size: 24px; margin-bottom: 10px;");
+	this->setAlignment(Qt::AlignJustify);
 }
