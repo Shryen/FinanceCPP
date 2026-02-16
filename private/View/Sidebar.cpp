@@ -7,7 +7,7 @@
 Sidebar::Sidebar(QWidget* parent) : QWidget(parent)
 {
 	setAttribute(Qt::WA_StyledBackground, true);
-	this->setStyleSheet("background-color: #192841; color: white; min-width: 250px;");
+	this->setStyleSheet("background-color: #042A2B; color: white; min-width: 250px;");
 	SideLayout = new QVBoxLayout(this);
 	SetupLabels();
 	SetupButtons();
@@ -18,6 +18,21 @@ Sidebar::Sidebar(QWidget* parent) : QWidget(parent)
 void Sidebar::SetCurrentUser(const QString& CurrentUser)
 {
 	CurrentUserLabel->setText("Hi " + CurrentUser + "!");
+}
+
+void Sidebar::SetWithdrawalAmount(const QString& Amount)
+{
+	WithdrawalCurrencyLabel->setText("Total Withdrawals: €" + Amount);
+}
+
+void Sidebar::SetDepositAmount(const QString& Amount)
+{
+	DepositCurrencyLabel->setText("Total Deposits: €" + Amount);
+}
+
+void Sidebar::SetTotalAmount(const QString& Amount)
+{
+	TotalCurrencyLabel->setText("Net Total: €" + Amount);
 }
 
 void Sidebar::SetupButtons()

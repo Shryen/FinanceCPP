@@ -10,14 +10,13 @@ MainWindow::MainWindow(QString Title, int w, int h, QWidget* parent) : Title(Tit
 {
 	resize(QSize{ width, height });
 	setWindowTitle(Title);
-    this->setStyleSheet("background-color: #ccc");
+    this->setStyleSheet("background-color: #F0EFF4");
 	
 	// First widget
 	SidebarWidget = new Sidebar();
-	SidebarWidget->setFixedWidth(250);
+	SidebarWidget->setMinimumWidth(250);
 
 	MainContentStack = new QStackedWidget();
-	MainContentStack->setStyleSheet("background-color: #eee;"); // Just to see it
 
 	loginView = new LoginView();
 	chartView = new ChartView();
@@ -27,6 +26,7 @@ MainWindow::MainWindow(QString Title, int w, int h, QWidget* parent) : Title(Tit
 
 	// then layout
 	QHBoxLayout* MainLayout = new QHBoxLayout(this);
+	MainLayout->setContentsMargins(0, 0, 0, 0);
 	MainLayout->addWidget(SidebarWidget);
 	MainLayout->addWidget(MainContentStack);
 }

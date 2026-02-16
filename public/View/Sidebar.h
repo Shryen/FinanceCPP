@@ -14,6 +14,9 @@ class Sidebar : public QWidget {
 public:
 	Sidebar(QWidget* parent = nullptr);
 	void SetCurrentUser(const QString& CurrentUser);
+	void SetWithdrawalAmount(const QString& Amount);
+	void SetDepositAmount(const QString& Amount);
+	void SetTotalAmount(const QString& Amount);
 private:
 	QLabel* TitleLabel;
 	MenuLabel* CurrentUserLabel;

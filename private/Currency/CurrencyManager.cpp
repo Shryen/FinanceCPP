@@ -1,7 +1,7 @@
 #include "Currency/CurrencyManager.h"
 
 
-Currency CurrencyManager::Summarize(std::vector<Entry>& Entries) {
+Currency CurrencyManager::Summarize(const std::vector<Entry>& Entries) {
     Currency sum{ "0.0" };
 
     for (const Entry& Entry : Entries) {
@@ -14,7 +14,7 @@ Currency CurrencyManager::Summarize(std::vector<Entry>& Entries) {
 }
 
 
-Currency CurrencyManager::GetWithdrawnAmount(std::vector<Entry>& Entries)
+Currency CurrencyManager::GetWithdrawnAmount(const std::vector<Entry>& Entries)
 {
     Currency totalWithdrawn{ "0" };
 
@@ -25,7 +25,7 @@ Currency CurrencyManager::GetWithdrawnAmount(std::vector<Entry>& Entries)
 	return totalWithdrawn.ToEuros();
 }
 
-Currency CurrencyManager::GetPayedInAmount(std::vector<Entry>& Entries)
+Currency CurrencyManager::GetPayedInAmount(const std::vector<Entry>& Entries)
 {
     Currency TotalPayedIn{ "0" };
 

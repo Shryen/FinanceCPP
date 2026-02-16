@@ -6,9 +6,9 @@
 class CurrencyManager
 {
 public:
-	Currency Summarize(std::vector<Entry>& Entries);
-	Currency GetWithdrawnAmount(std::vector<Entry>& Entries);
-	Currency GetPayedInAmount(std::vector<Entry>& Entries);
+	Currency Summarize(const std::vector<Entry>& Entries);
+	Currency GetWithdrawnAmount(const std::vector<Entry>& Entries);
+	Currency GetPayedInAmount(const std::vector<Entry>& Entries);
 	bool IsValidAmount(Currency& Input);
 };
 

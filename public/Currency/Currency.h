@@ -3,6 +3,8 @@
 #include <iostream>
 #include <iomanip> 
 
+class QString;
+
 class Currency
 {
 public:
@@ -14,6 +16,8 @@ public:
 	// just for display purposes
 	double ToEuros() const { return Amount / 100.0; };
 	bool Empty();
+
+	QString ToString();
 	// Basic functions END #####
 
 

@@ -1,5 +1,6 @@
 #include "Currency/Currency.h"
 #include <iostream>
+#include <QString>
 
 Currency::Currency(int Amount)
 {
@@ -43,6 +44,11 @@ bool Currency::Empty()
 	if (Amount == 0)
 		return true;
 	return false;
+}
+
+QString Currency::ToString()
+{
+	return QString::number(this->ToEuros(), 'f', 2);
 }
 
 std::ostream& operator<<(std::ostream& os, const Currency& Currency)

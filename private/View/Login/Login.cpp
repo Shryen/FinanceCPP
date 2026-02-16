@@ -11,8 +11,8 @@ LoginView::LoginView(QWidget* parent) : QWidget(parent)
 	LoginWidget = new QWidget();
 	LoginWidget->setAttribute(Qt::WA_StyledBackground, true);
 	LoginWidget->setStyleSheet(
-		"background-color: #0a2e4a;"
-		"color: white;"
+		"background-color: #FCFCFC;"
+		"color: #042A2B;"
 		"font-size: 24px;"
 	);
 	SetupButtons();
@@ -34,7 +34,7 @@ void LoginView::SetupButtons()
 	
 	QString buttonStylesheet =
 		"QPushButton {"
-		"	background-color: #1e5a96;"
+		"	background-color: #1D4249;"
 		"	color: white;"
 		"	border: none;"
 		"	border-radius: 8px;"
@@ -43,10 +43,10 @@ void LoginView::SetupButtons()
 		"	font-weight: bold;"
 		"}"
 		"QPushButton:hover {"
-		"	background-color: #2a7dc4;"
+		"	background-color: #075F5F;"
 		"}"
 		"QPushButton:pressed {"
-		"	background-color: #1a4a7a;"
+		"	background-color: #075F5F;"
 		"}";
 	
 	AnaButton->setStyleSheet(buttonStylesheet);
