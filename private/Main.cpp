@@ -1,9 +1,17 @@
 #include <QApplication>
 #include "Window/MainWindow.h"
+#include "Presenter/MainPresenter.h"
+#include "Entry/EntryManager.h"
+#include "Currency/CurrencyManager.h";
+#include "FileController.h"
 
 int main(int argc, char* argv[]) {
 	QApplication App(argc, argv);
-	MainWindow Window{"Finances", 800, 600};
+	MainWindow Window{"Finances", 1200, 800};
+	FileController fileController{ "vault.data" };
+	CurrencyManager currencyManager{};
+	EntryManager Vault{ &fileController };
+	MainPresenter Presenter{ &Window, &Vault, &currencyManager};
 	Window.show();
 
 	return App.exec();

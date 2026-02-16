@@ -12,7 +12,7 @@ class FileController;
 class EntryManager
 {
 public:
-	EntryManager(FileController* FileController, CurrencyManager* CurrencyMgr);
+	EntryManager(FileController* FileController);
 
 	/*
 	 Writes a new entry to the file and updates the vector
@@ -36,7 +36,7 @@ public:
 		7. Help (prints this menu again)
 	*/
 	void PrintMenu();
-	void PrintSummary();
+	//void PrintSummary();
 	/* 
 		Checks if the user put the right input
 	*/
@@ -62,12 +62,11 @@ private:
 
 	std::vector<char> ValidYesNo{ 'y', 'Y', 'n', 'N' };
 
-	CurrencyManager* CurrencyMgr{ nullptr };
 	FileController* FileControllerPtr{ nullptr };
 
 	type GetTypeFromUser(char Response);
 
-	Currency TryToGetAmount(Currency& Amount, std::string ErrorMessage);
+	//Currency TryToGetAmount(Currency& Amount, std::string ErrorMessage);
 
 	QString Name;
 };

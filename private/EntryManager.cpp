@@ -3,10 +3,9 @@
 #include "FileController.h"
 
 
-EntryManager::EntryManager(FileController* FileController, CurrencyManager* CurrencyMgr)
+EntryManager::EntryManager(FileController* FileController)
 {
 	this->FileControllerPtr = FileController;
-	this->CurrencyMgr = CurrencyMgr;
 
 	FileControllerPtr->ReadEntriesFromFile(Entries);
 }
@@ -21,7 +20,7 @@ void EntryManager::WriteNewEntryToFile()
 	PrintEntries();
 	std::cout << '\n';
 
-	TryToGetAmount(EuroAmount, "Amount has to be a number and greater than zero.");
+	//TryToGetAmount(EuroAmount, "Amount has to be a number and greater than zero.");
 
 	char Response{'0'};
 	TransactionType = GetTypeFromUser(Response);
@@ -60,6 +59,7 @@ type EntryManager::GetTypeFromUser(char Response) {
 	}
 }
 
+/*
 Currency EntryManager::TryToGetAmount(Currency& Amount, std::string ErrorMessage)
 {
 	int Tries = 0;
@@ -79,6 +79,7 @@ Currency EntryManager::TryToGetAmount(Currency& Amount, std::string ErrorMessage
 
 	return Amount;
 }
+*/
 
 
 void EntryManager::PrintEntries()
@@ -209,6 +210,7 @@ void EntryManager::PrintMenu()
 	std::cout << "[7] Help" << std::endl;
 }
 
+/*
 void EntryManager::PrintSummary()
 {
 	std::cout << "\nSummary of all transactions: \n";
@@ -216,6 +218,7 @@ void EntryManager::PrintSummary()
 	std::cout << "Pay-ins:\t " << CurrencyMgr->GetPayedInAmount(Entries) << std::endl;
 	std::cout << "Total balance:\t " << CurrencyMgr->Summarize(Entries) << std::endl << std::endl;
 }
+*/
 
 bool EntryManager::CheckInput(char Response, std::vector<char> Characters)
 {

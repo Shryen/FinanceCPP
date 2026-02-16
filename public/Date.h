@@ -18,11 +18,14 @@ class Date {
 public:
 	class Invalid {};
 	Date();
-	Date(int y, Month m, int d);
+	Date(int y, Month m, int d, int hour, int minute, int second);
 	int GetEMonth() const { return int(Emonth); }
 	int GetMonth() const { return month; }
 	int GetDay() const { return day; }
 	int GetYear() const { return year; }
+	int GetHour() const { return hour; }
+	int GetMinute() const { return minute; }
+	int GetSecond() const { return second; }
 
 	void AddDay(int n);
 
@@ -32,6 +35,10 @@ private:
 	Month Emonth{Month::Jan};
     int day{0};
     bool is_valid();
+
+	int hour;
+	int minute;
+	int second;
 };
 
 std::ostream& operator<<(std::ostream& os, const Date& d);

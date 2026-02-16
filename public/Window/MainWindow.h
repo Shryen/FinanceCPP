@@ -2,38 +2,42 @@
 #define MAINWINDOW_H
 
 #include <QWidget>
-#include <QVBoxLayout>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
-#include "Entry/EntryManager.h"
-#include "Currency/CurrencyManager.h"
-#include "FileController.h"
+
+class Sidebar;
+class QStackedWidget;
+class LoginView;
+class ChartView;
+
+enum class ViewPage {
+	ViewLogin,
+	ViewEntries,
+};
 
 class MainWindow : public QWidget {
-	//Q_OBJECT  // Required for signals/slots
+	Q_OBJECT  // Required for signals/slots
 
 public:
 	MainWindow( QString Title, int w, int h, QWidget * parent = nullptr );
 
+	Sidebar* GetSidebar() const { return SidebarWidget; }
+	QStackedWidget* GetContentStack() const { return MainContentStack; }
+	LoginView* GetLoginView() const { return loginView; }
+	//QHBoxLayout* GetMainLayout() const { return MainLayout; }
+	ChartView* GetChartView() const { return chartView; }
+
+	//void SetSideBarWidget(Sidebar* Sidebar);
+
 private:
-	void SetupUI();
-	void SetupConnections();
-	
-	QString Title{ "Finances" };
-	int width{ 400 };
-	int height{ 800 };
+	// Base Widgets
+	Sidebar* SidebarWidget;
+	QStackedWidget* MainContentStack;
+	QString Title;
+	int width;
+	int height;
 
-	FileController* Filecontroller{ nullptr };
-	CurrencyManager* CurrencyMgr{ nullptr };
-	EntryManager* Vault{ nullptr };
-
-	QVBoxLayout* VLayout;
-	QHBoxLayout* HLayout;
-	QLabel* NameLabel;
-	QLineEdit* NameInput;
-	QPushButton* NameSaveButton;
-	QWidget* SideBar;
+	// Views
+	LoginView* loginView;
+	ChartView* chartView;
 };
 
 #endif
