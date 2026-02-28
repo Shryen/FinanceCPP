@@ -10,20 +10,22 @@ EntryManager::EntryManager(FileController* FileController)
 	FileControllerPtr->ReadEntriesFromFile(Entries);
 }
 
-void EntryManager::WriteNewEntryToFile()
+void EntryManager::WriteNewEntryToFile(const QString& Person, const QString& Amount)
 {
 	int id{ 1 };
-	Currency EuroAmount{ "0" };
-	std::string Person{ "" };
-	type TransactionType{};
+	Currency EuroAmount{Amount.toStdString()};
+	//std::string Person{ "" };
+	type TransactionType{type::payin};
 
+	/*
 	PrintEntries();
 	std::cout << '\n';
+	*/
 
 	//TryToGetAmount(EuroAmount, "Amount has to be a number and greater than zero.");
 
-	char Response{'0'};
-	TransactionType = GetTypeFromUser(Response);
+	//char Response{'0'};
+	//TransactionType = GetTypeFromUser(Response);
 
 	if (!Entries.empty())
 		id = Entries.back().id + 1;
@@ -31,7 +33,7 @@ void EntryManager::WriteNewEntryToFile()
 	Entry NewEntry;
 	NewEntry.id = id;
 	NewEntry.amount = EuroAmount;
-	NewEntry.Person = Person;
+	NewEntry.Person = Person.toStdString();
 	NewEntry.TypeOfEntry = TransactionType;
 	NewEntry.OldValue = 0;
 

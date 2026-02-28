@@ -12,7 +12,6 @@ FileController::FileController(std::string FilePath)
 	// if file doesn't exist create one!
 	if (!Readfile) {
 		std::ofstream OutFile(FileName);
-		OutFile.open(FileName);
 		OutFile.close();
 	}
 }
@@ -24,18 +23,28 @@ std::vector<Entry> FileController::ReadEntriesFromFile(std::vector<Entry>& Entri
 	if(!InputFile) 
 		throw std::runtime_error("Couldn't open file: " + FileName);
 
+	
+	if (InputFile.fail()) {
+		std::cout << "Failed parsing line";
+	}
 	Entry RowEntry;
 	std::string TypeString;
+	std::cout << "Reading entries from file: " << FileName << std::endl;
 	while (InputFile >> RowEntry.id
 		>> RowEntry.DateofRecord
 		>> RowEntry.amount
 		>> RowEntry.Person
 		>> TypeString
 		>> RowEntry.OldValue) {
+
 		RowEntry.TypeOfEntry = StringToType(TypeString);
 		Entries.push_back(RowEntry);
 	}
-	if (Entries.empty()) FileEmpty = true;
+	if (Entries.empty()) {
+		std::cout << "File is empty, no entries to read.\n";
+		std::cout << "Filename: " << FileName;
+		FileEmpty = true;
+	}
 	return Entries;
 }
 

@@ -17,5 +17,7 @@ file(GLOB_RECURSE SOURCES "private/*.cpp")
 file(GLOB_RECURSE HEADERS "public/*.h")
 
 add_executable(Vault ${SOURCES} ${HEADERS})
-target_link_libraries(Vault Qt6::Widgets
-							Qt6::Charts)
+target_link_libraries(Vault 
+						PRIVATE
+						Qt6::Widgets
+						Qt6::Charts)

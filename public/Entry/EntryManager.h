@@ -20,7 +20,7 @@ public:
 	 Type choosable between payin and withdraw
 	 ID increments automatically
 	*/
-	void WriteNewEntryToFile();
+	void WriteNewEntryToFile(const QString& Person, const QString& Amount);
 	void PrintEntries();
 	const std::vector<Entry>& GetEntries() { return Entries; }
 	void PrintEntry(int Index);

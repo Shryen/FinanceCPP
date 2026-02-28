@@ -10,7 +10,8 @@ class MainPresenter : public QObject {
 
 public:
 	MainPresenter(MainWindow* MainWindow, EntryManager* EntryManager, CurrencyManager* CurrencyManager, QObject* parent = nullptr);
-
+private slots:
+    void OnAddEntryButtonClicked(const QString& Amount);
 private:
     MainWindow* mainWindow;
 
@@ -19,6 +20,7 @@ private:
 
     QString CurrentUser;
 
-	void HandleLogin(const QString& CurrentUser);
     void RefreshChart();
+	void HandleLogin(const QString& CurrentUser);
+    void HandleAddEntry();
 };

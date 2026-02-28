@@ -6,8 +6,6 @@
 #include "Entry/EntryManager.h"
 #include "Currency/CurrencyManager.h"
 #include <QStackedWidget>
-#include <iostream>
-
 
 MainPresenter::MainPresenter(MainWindow* MainWindow, EntryManager* EntryManager, CurrencyManager* CurrencyManager, QObject* parent) : QObject(parent), mainWindow(MainWindow), currencyManager(CurrencyManager), entryManager(EntryManager)
 {
@@ -17,6 +15,14 @@ MainPresenter::MainPresenter(MainWindow* MainWindow, EntryManager* EntryManager,
 	sideBar->SetWithdrawalAmount(currencyManager->GetWithdrawnAmount(entryManager->GetEntries()).ToString());
 	sideBar->SetDepositAmount(currencyManager->GetPayedInAmount(entryManager->GetEntries()).ToString());
 	sideBar->SetTotalAmount(currencyManager->Summarize(entryManager->GetEntries()).ToString());
+
+	connect(sideBar, &Sidebar::AddEntryClicked, this, &MainPresenter::HandleAddEntry);
+	connect(mainWindow->GetEntryView(), &AddEntryView::buttonClicked, this,&MainPresenter::OnAddEntryButtonClicked);
+}
+
+void MainPresenter::OnAddEntryButtonClicked(const QString& Amount) {
+	qDebug() << "MainPresenter received AddEntryButtonClicked with Amount: " << Amount;
+	entryManager->WriteNewEntryToFile(CurrentUser, Amount);
 }
 
 void MainPresenter::HandleLogin(const QString& CurrentUser)
@@ -39,4 +45,11 @@ void MainPresenter::RefreshChart()
 	mainWindow->GetChartView()->UpdateChartData(qEntries);
 }
 
+
+void MainPresenter::HandleAddEntry() {
+	QStackedWidget* contentStack = mainWindow->GetContentStack();
+	if (!contentStack) { qDebug() << "Content Stack is null in HandleAddEntry()"; return; }
+
+	contentStack->setCurrentWidget(mainWindow->GetEntryView());
+}
 

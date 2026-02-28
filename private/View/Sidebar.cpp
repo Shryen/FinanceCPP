@@ -54,7 +54,8 @@ void Sidebar::SetupButtons()
 	EditEntryButton->hide();
 	DeleteEntryButton->hide();
 
-	//connect(ViewEntriesButton, &QPushButton::clicked, this, &Sidebar::OnViewEntriesClicked);
+	// Correct signal-slot connection
+	connect(AddEntryButton, &QPushButton::clicked, this, &Sidebar::OnAddEntryButtonClicked);
 }
 
 void Sidebar::SetupLabels()

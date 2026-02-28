@@ -2,11 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QWidget>
+#include "View/Entry/AddEntryView.h"
 
 class Sidebar;
 class QStackedWidget;
 class LoginView;
 class ChartView;
+
 
 enum class ViewPage {
 	ViewLogin,
@@ -22,10 +24,9 @@ public:
 	Sidebar* GetSidebar() const { return SidebarWidget; }
 	QStackedWidget* GetContentStack() const { return MainContentStack; }
 	LoginView* GetLoginView() const { return loginView; }
-	//QHBoxLayout* GetMainLayout() const { return MainLayout; }
 	ChartView* GetChartView() const { return chartView; }
 
-	//void SetSideBarWidget(Sidebar* Sidebar);
+	AddEntryView* GetEntryView() const { return EntryManagerView; }
 
 private:
 	// Base Widgets
@@ -38,6 +39,7 @@ private:
 	// Views
 	LoginView* loginView;
 	ChartView* chartView;
+	AddEntryView* EntryManagerView;
 };
 
 #endif

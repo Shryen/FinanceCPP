@@ -20,12 +20,15 @@ public:
 
 	void ShowSidebarContent();
 private:
+	// Labels
 	QLabel* TitleLabel;
 	MenuLabel* CurrentUserLabel;
 	MenuLabel* WithdrawalCurrencyLabel;
 	MenuLabel* DepositCurrencyLabel;
 	MenuLabel* TotalCurrencyLabel;
-	MenuButton* ViewEntriesButton;
+
+	// Buttons
+	//MenuButton* ViewEntriesButton;
 	MenuButton* AddEntryButton;
 	MenuButton* EditEntryButton;
 	MenuButton* DeleteEntryButton;
@@ -42,10 +45,10 @@ private:
 	void SetupCurrencyLabels();
 
 signals:
-	void ViewEntriesClicked();
+	void AddEntryClicked();
 
 public slots:
-	void OnViewEntriesClicked() { emit ViewEntriesClicked(); }
+	void OnAddEntryButtonClicked() { emit AddEntryClicked(); }
 	void OnLoginButtonClicked(QString CurrentUser) { SetCurrentUser(CurrentUser); }
 };
 

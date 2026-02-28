@@ -19,7 +19,7 @@ Currency::Currency(std::string Amount)
 			DecimalFound = true;
 		}
 		if (!DecimalFound) 
-			Euro = Euro * 10 + (Amount[i] - '0');
+			Euro = Cent * 10 + (Amount[i] - '0');
 		else
 			Cent = Cent * 10 + (Amount[i] - '0');
 		// convert char to it's ASCII value

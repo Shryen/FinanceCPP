@@ -46,11 +46,9 @@ std::ostream& operator<<(std::ostream& os, const Date& d) {
 std::istream& operator>>(std::istream& is, Date& d)
 {
 	int y, m, day, hour, minute, second;
-	char dash = '-';
-	char slash = '/';
-	char semicolon = ':';
-	if (is >> y >> dash >> m >> dash >> day >> slash >> hour >> semicolon >> minute >> semicolon >> second){
-		if (dash != '-' || slash != '/' || semicolon != ':')
+	char dash1, dash2, slash, semicolon1, semicolon2;
+	if (is >> y >> dash1 >> m >> dash2 >> day >> slash >> hour >> semicolon1 >> minute >> semicolon2 >> second){
+		if (dash1 != '-' || dash2 != '-' || slash != '/' || semicolon1 != ':' || semicolon2 != ':')
 			is.setstate(std::ios::failbit);
 
 		d = Date(y, static_cast<Month>(m), day, hour, minute, second);

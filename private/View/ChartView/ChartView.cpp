@@ -1,14 +1,12 @@
-#include "View/ChartView/ChartView.h"
 #include <QLabel>
-#include <QChart>
 #include <QChartView>
 #include <QVBoxLayout>
-#include <QBarSet>
 #include <QLineSeries>
 #include <QDateTimeAxis>
 #include <QValueAxis>
 #include <QDateTime>
-#include "Currency/CurrencyManager.h"
+#include "View/ChartView/ChartView.h"
+#include <QDir>
 
 ChartView::ChartView(QWidget* parent)
 {
@@ -35,7 +33,7 @@ ChartView::ChartView(QWidget* parent)
 void ChartView::UpdateChartData(const QVector<Entry>& Entries)
 {
     if (Entries.isEmpty()) return;
-
+    qDebug() << "CWD:" << QDir::currentPath();
     QDateTime XDate;
     qreal YSum = 0;
     for (const Entry& entry : Entries) {
