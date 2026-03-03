@@ -1,6 +1,5 @@
 #include "Currency/CurrencyManager.h"
 
-
 Currency CurrencyManager::Summarize(const std::vector<Entry>& Entries) {
     Currency sum{ "0" };
 
@@ -12,7 +11,6 @@ Currency CurrencyManager::Summarize(const std::vector<Entry>& Entries) {
     }
     return sum;
 }
-
 
 Currency CurrencyManager::GetWithdrawnAmount(const std::vector<Entry>& Entries)
 {

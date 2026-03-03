@@ -23,6 +23,9 @@ MainPresenter::MainPresenter(MainWindow* MainWindow, EntryManager* EntryManager,
 void MainPresenter::OnAddEntryButtonClicked(const QString& Amount) {
 	qDebug() << "MainPresenter received AddEntryButtonClicked with Amount: " << Amount;
 	entryManager->WriteNewEntryToFile(CurrentUser, Amount);
+	QStackedWidget* contentStack = mainWindow->GetContentStack();
+	contentStack->setCurrentWidget(mainWindow->GetChartView());
+	RefreshChart();
 }
 
 void MainPresenter::HandleLogin(const QString& CurrentUser)

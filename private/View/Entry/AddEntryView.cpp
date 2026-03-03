@@ -48,5 +48,6 @@ AddEntryView::AddEntryView(QWidget* parent) : QWidget(parent) {
 
     connect(AddEntryButton, &QPushButton::clicked, this, [this]() {
         emit buttonClicked(AmountInput->text());
+        AmountInput->clear();
     });
 }
