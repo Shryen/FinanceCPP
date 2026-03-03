@@ -2,13 +2,13 @@
 #include "Window/MainWindow.h"
 #include "Presenter/MainPresenter.h"
 #include "Entry/EntryManager.h"
-#include "Currency/CurrencyManager.h";
+#include "Currency/CurrencyManager.h"
 #include "FileController.h"
 
 int main(int argc, char* argv[]) {
 	QApplication App(argc, argv);
 	MainWindow Window{"Finances", 1200, 800};
-	FileController fileController{ "vault.data" };
+	FileController fileController{ "vault.dat" };
 	CurrencyManager currencyManager{};
 	EntryManager Vault{ &fileController };
 	MainPresenter Presenter{ &Window, &Vault, &currencyManager};

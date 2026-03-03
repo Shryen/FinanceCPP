@@ -2,7 +2,7 @@
 
 
 Currency CurrencyManager::Summarize(const std::vector<Entry>& Entries) {
-    Currency sum{ "0.0" };
+    Currency sum{ "0" };
 
     for (const Entry& Entry : Entries) {
         if (Entry.TypeOfEntry == type::payin) 
@@ -10,7 +10,7 @@ Currency CurrencyManager::Summarize(const std::vector<Entry>& Entries) {
         else if (Entry.TypeOfEntry == type::withdraw) 
             sum -= Entry.amount;
     }
-    return sum.ToEuros();
+    return sum;
 }
 
 
@@ -22,7 +22,7 @@ Currency CurrencyManager::GetWithdrawnAmount(const std::vector<Entry>& Entries)
         if (Entry.TypeOfEntry == type::withdraw)
             totalWithdrawn += Entry.amount;
  
-	return totalWithdrawn.ToEuros();
+	return totalWithdrawn;
 }
 
 Currency CurrencyManager::GetPayedInAmount(const std::vector<Entry>& Entries)
@@ -33,7 +33,7 @@ Currency CurrencyManager::GetPayedInAmount(const std::vector<Entry>& Entries)
         if(Entry.TypeOfEntry == type::payin)
 			TotalPayedIn += Entry.amount;
 
-    return TotalPayedIn.ToEuros();
+    return TotalPayedIn;
 }
 
 bool CurrencyManager::IsValidAmount(Currency& Input)

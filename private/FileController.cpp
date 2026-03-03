@@ -23,10 +23,9 @@ std::vector<Entry> FileController::ReadEntriesFromFile(std::vector<Entry>& Entri
 	if(!InputFile) 
 		throw std::runtime_error("Couldn't open file: " + FileName);
 
+	if (InputFile.fail()) 
+		std::cout << "Failed parsing line" << '\n';
 	
-	if (InputFile.fail()) {
-		std::cout << "Failed parsing line";
-	}
 	Entry RowEntry;
 	std::string TypeString;
 	std::cout << "Reading entries from file: " << FileName << std::endl;
@@ -34,9 +33,7 @@ std::vector<Entry> FileController::ReadEntriesFromFile(std::vector<Entry>& Entri
 		>> RowEntry.DateofRecord
 		>> RowEntry.amount
 		>> RowEntry.Person
-		>> TypeString
-		>> RowEntry.OldValue) {
-
+		>> TypeString) {
 		RowEntry.TypeOfEntry = StringToType(TypeString);
 		Entries.push_back(RowEntry);
 	}
@@ -45,6 +42,7 @@ std::vector<Entry> FileController::ReadEntriesFromFile(std::vector<Entry>& Entri
 		std::cout << "Filename: " << FileName;
 		FileEmpty = true;
 	}
+	std::cout << "Entries read: " << Entries.size() << '\n';
 	return Entries;
 }
 
@@ -61,15 +59,13 @@ void FileController::WriteEntriesToFile(const std::vector<Entry>& Entries)
 	 * I don't want that
 	 */
 
-	for (const Entry& Entry : Entries) 
-		if (Entry.OldValue == 0)
+	for (const Entry& Entry : Entries)
 			OutputFile << Entry.id << " "
 			<< Entry.DateofRecord << " "
 			<< Entry.amount.GetAmount() << " "
 			<< Entry.Person << " "
-			<< TypeToString(Entry.TypeOfEntry) << " "
-			<< Entry.OldValue << '\n';
-	}
+			<< TypeToString(Entry.TypeOfEntry) << '\n';
+}
 
 
 std::string FileController::TypeToString(type t)

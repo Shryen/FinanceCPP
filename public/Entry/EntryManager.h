@@ -23,7 +23,7 @@ public:
 	void WriteNewEntryToFile(const QString& Person, const QString& Amount);
 	void PrintEntries();
 	const std::vector<Entry>& GetEntries() { return Entries; }
-	void PrintEntry(int Index);
+	//void PrintEntry(int Index);
 	void EditEntry();
 
 	/* Prints options available to the user.

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <QString>
 
-Currency::Currency(int Amount)
+Currency::Currency(long long Amount)
 {
 	this->Amount = Amount;
 }
@@ -18,10 +18,12 @@ Currency::Currency(std::string Amount)
 			Amount.erase(i, 1);
 			DecimalFound = true;
 		}
+
 		if (!DecimalFound) 
-			Euro = Cent * 10 + (Amount[i] - '0');
+			Euro = Euro * 10 + (Amount[i] - '0');
 		else
 			Cent = Cent * 10 + (Amount[i] - '0');
+
 		// convert char to it's ASCII value
 		// for example '5' - '0' = 53-48 = 5
 		// then we shift the result to the left (result*10)
@@ -51,8 +53,10 @@ QString Currency::ToString()
 	return QString::number(this->ToEuros(), 'f', 2);
 }
 
+
 std::ostream& operator<<(std::ostream& os, const Currency& Currency)
 {
 	os << std::fixed << std::setprecision(2) << (Currency.Amount / 100.0);
 	return os;
 }
+

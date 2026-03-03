@@ -9,10 +9,11 @@ class Currency
 {
 public:
 	// Basic functions START #####
-	Currency(int Amount);
-	Currency(std::string Amount);	
+	Currency(long long Amount);
+	Currency(std::string Amount);
 
-	int GetAmount() const { return Amount; }
+	long long GetAmount() const { return Amount; }
+	void SetAmount(long long NewAmount) { Amount = NewAmount; }
 	// just for display purposes
 	double ToEuros() const { return Amount / 100.0; };
 	bool Empty();
@@ -23,16 +24,16 @@ public:
 
 	// Operator Overloads START #####
 	Currency operator+(const Currency& other) const {
-		return Currency(std::to_string(Amount + other.Amount));
+		return Currency(Amount + other.Amount);
 	}
 	Currency operator-(const Currency& other) const {
-		return Currency(std::to_string(Amount - other.Amount));
+		return Currency(Amount - other.Amount);
 	}
 	Currency operator*(float multiplier) const {
-		return Currency(std::to_string(Amount * multiplier));
+		return Currency(Amount * multiplier);
 	}
 	Currency operator/(float divisor) const {
-		return Currency(std::to_string(Amount / divisor));
+		return Currency(Amount / divisor);
 	}
 
 	Currency& operator+=(const Currency& other) {
@@ -69,11 +70,28 @@ private:
 	long long Amount{ 0 };
 };
 
-
+/*
 //Inline so it doesn't break the one definition rule
 std::ostream& operator<<(std::ostream& os, const Currency& Currency);
 std::ostream& operator<<(std::ostream& os, const Currency& Currency);
+*/
 
+inline std::istream& operator>>(std::istream& is, Currency& CurrencyObj) {
+	try {
+		long long cents;
+		is >> cents;
+		Currency temporary(cents);
+		CurrencyObj = temporary;
+	}
+	catch (std::exception& e) {
+		std::cerr << "Error reading currency: " << e.what() << std::endl;
+		is.setstate(std::ios::failbit);
+	}
+
+	return is;
+}
+
+/*
 inline std::istream& operator>>(std::istream& is, Currency& CurrencyObj) {
 	try {
 		std::string input;
@@ -90,4 +108,4 @@ inline std::istream& operator>>(std::istream& is, Currency& CurrencyObj) {
 	}
 	return is;
 }
-
+*/

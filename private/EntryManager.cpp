@@ -35,7 +35,6 @@ void EntryManager::WriteNewEntryToFile(const QString& Person, const QString& Amo
 	NewEntry.amount = EuroAmount;
 	NewEntry.Person = Person.toStdString();
 	NewEntry.TypeOfEntry = TransactionType;
-	NewEntry.OldValue = 0;
 
 	Entries.push_back(NewEntry);
 	FileControllerPtr->WriteEntriesToFile(Entries);
@@ -92,27 +91,20 @@ void EntryManager::PrintEntries()
 		std::cout << "ID\t| Date\t\t| Amount\t| Person\t| Type\n";
 		std::cout << std::string(65, '-') << '\n';
 		for (int i = 0; i < Entries.size(); ++i) {
+
 			Currency EuroAmount = Entries[i].amount.ToEuros();
-			Currency OldEuroAmount = Entries[i].OldValue.ToEuros();
-			
-			if (Entries[i].OldValue == 0)
-				std::cout << "[" << Entries[i].id << "]\t| "
+
+			std::cout << "[" << Entries[i].id << "]\t| "
 				<< Entries[i].DateofRecord << "\t| "
 				<< "€" << EuroAmount << "\t\t| "
 				<< Entries[i].Person << "\t\t| "
 				<< FileControllerPtr->TypeToString(Entries[i].TypeOfEntry) << '\n';
-			else
-				std::cout << "[" << Entries[i].id << "]\t| "
-				<< Entries[i].DateofRecord << "\t| "
-				<< "€" << EuroAmount << "\t\t| "
-				<< Entries[i].Person << "\t\t| "
-				<< FileControllerPtr->TypeToString(Entries[i].TypeOfEntry) << "\t | "
-				<< "[Edited from €" << OldEuroAmount << "]" << '\n';
 		}
 		std::cout << '\n';
 	}
 }
 
+/*
 void EntryManager::PrintEntry(int index)
 {
 	std::cout << '\n';
@@ -136,6 +128,8 @@ void EntryManager::PrintEntry(int index)
 			<< "[Edited from €" << OldEuroAmount << "]" << '\n';
 	}
 }
+*/
+
 
 void EntryManager::EditEntry()
 {
@@ -156,7 +150,7 @@ void EntryManager::EditEntry()
 
 	int index = Response;
 	std::cout << "\nSelected: ";
-	PrintEntry(index);
+	//PrintEntry(index);
 
 	std::cout << "\nAre you sure you want to edit this entry? (y / n)\n";
 	char CharResponse;
@@ -173,12 +167,12 @@ void EntryManager::EditEntry()
 		case '1':
 		{
 			std::cout << "Enter new amount: ";
-			Entries[index].OldValue = Entries[index].amount;
+			//Entries[index].OldValue = Entries[index].amount;
 			Currency EuroAmount{ "0" };
-			std::cin >> EuroAmount;
+			//std::cin >> EuroAmount;
 			Entries[index].amount = EuroAmount;
 			std::cout << "Amount changed: \n";
-			PrintEntry(index);
+			//PrintEntry(index);
 		}
 			break;
 		case '2':
@@ -186,7 +180,7 @@ void EntryManager::EditEntry()
 			std::cout << "Enter new person: ";
 			std::cin >> Entries[index].Person;
 			std::cout << "Person changed: \n";
-			PrintEntry(index);
+			//PrintEntry(index);
 		}
 			break;
 		default:
@@ -259,7 +253,7 @@ void EntryManager::DeleteChoice()
 	std::cout << '\n';
 	std::cout << "User choice: " << Index;
 	char Response;
-	PrintEntry(Index);
+	//PrintEntry(Index);
 	std::cout << "\nAre you sure you want to delete this line? (y/n)\n";
 
 	Response = ReadOption(GetValidYesNo());

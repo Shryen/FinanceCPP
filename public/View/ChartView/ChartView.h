@@ -8,6 +8,7 @@ class QLineSeries;
 class QChartView;
 class QVBoxLayout;
 class QDateTimeAxis;
+class QValueAxis;
 
 class ChartView : public QWidget
 {
@@ -23,4 +24,6 @@ private:
 	QVBoxLayout* layout;
 	QLineSeries* Series;
 	QChartView* View;
+	QDateTimeAxis* AxisX;
+	QValueAxis* AxisY;
 };
