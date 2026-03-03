@@ -12,6 +12,7 @@ public:
 	MainPresenter(MainWindow* MainWindow, EntryManager* EntryManager, CurrencyManager* CurrencyManager, QObject* parent = nullptr);
 private slots:
     void OnAddEntryButtonClicked(const QString& Amount);
+    void OnViewEntriesClicked();
 private:
     MainWindow* mainWindow;
 

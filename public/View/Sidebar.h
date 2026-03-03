@@ -28,7 +28,7 @@ private:
 	MenuLabel* TotalCurrencyLabel;
 
 	// Buttons
-	//MenuButton* ViewEntriesButton;
+	MenuButton* ViewEntriesButton;
 	MenuButton* AddEntryButton;
 	MenuButton* EditEntryButton;
 	MenuButton* DeleteEntryButton;
@@ -46,10 +46,12 @@ private:
 
 signals:
 	void AddEntryClicked();
+	void ViewEntriesClicked();
 
 public slots:
 	void OnAddEntryButtonClicked() { emit AddEntryClicked(); }
 	void OnLoginButtonClicked(QString CurrentUser) { SetCurrentUser(CurrentUser); }
+	void OnViewEntriesButtonClicked() { emit ViewEntriesClicked(); }
 };
 
 #endif

@@ -6,6 +6,7 @@
 #include "View/Login/Login.h"
 #include "View/ChartView/ChartView.h"
 #include "View/Entry/AddEntryView.h"
+#include "View/Entry/EntryView.h"
 
 MainWindow::MainWindow(QString Title, int w, int h, QWidget* parent) : Title(Title), width(w), height(h), QWidget(parent)
 {
@@ -22,10 +23,12 @@ MainWindow::MainWindow(QString Title, int w, int h, QWidget* parent) : Title(Tit
 	loginView = new LoginView();
 	chartView = new ChartView();
 	EntryManagerView = new AddEntryView();
+	entryView = new EntryView();
 
 	MainContentStack->addWidget(loginView);
 	MainContentStack->addWidget(chartView);
 	MainContentStack->addWidget(EntryManagerView);
+	MainContentStack->addWidget(entryView);
 
 	// then layout
 	QHBoxLayout* MainLayout = new QHBoxLayout(this);

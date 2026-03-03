@@ -40,6 +40,7 @@ void Sidebar::ShowSidebarContent()
 	WithdrawalCurrencyLabel->show();
 	DepositCurrencyLabel->show();
 	TotalCurrencyLabel->show();
+	ViewEntriesButton->show();
 	AddEntryButton->show();
 	EditEntryButton->show();
 	DeleteEntryButton->show();
@@ -47,14 +48,17 @@ void Sidebar::ShowSidebarContent()
 
 void Sidebar::SetupButtons()
 {
+	ViewEntriesButton = new MenuButton("View Entries", this);
 	AddEntryButton = new MenuButton("Add Entry", this);
 	EditEntryButton = new MenuButton("Edit Entry", this);
 	DeleteEntryButton = new MenuButton("Delete Entry", this);
 	AddEntryButton->hide();
 	EditEntryButton->hide();
 	DeleteEntryButton->hide();
+	ViewEntriesButton->hide();
 
 	// Correct signal-slot connection
+	connect(ViewEntriesButton, &QPushButton::clicked, this, &Sidebar::OnViewEntriesButtonClicked);
 	connect(AddEntryButton, &QPushButton::clicked, this, &Sidebar::OnAddEntryButtonClicked);
 }
 
@@ -100,6 +104,7 @@ void Sidebar::AddWidgetsToLayout()
 	SideLayout->addWidget(TotalCurrencyLabel);
 
 	// Buttons
+	SideLayout->addWidget(ViewEntriesButton);
 	SideLayout->addWidget(AddEntryButton);
 	SideLayout->addWidget(EditEntryButton);
 	SideLayout->addWidget(DeleteEntryButton);

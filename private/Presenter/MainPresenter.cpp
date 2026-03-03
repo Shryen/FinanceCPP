@@ -3,6 +3,7 @@
 #include "View/Sidebar.h"
 #include "View/Login/Login.h"
 #include "View/ChartView/ChartView.h"
+#include "View/Entry/EntryView.h"
 #include "Entry/EntryManager.h"
 #include "Currency/CurrencyManager.h"
 #include <QStackedWidget>
@@ -17,7 +18,14 @@ MainPresenter::MainPresenter(MainWindow* MainWindow, EntryManager* EntryManager,
 	sideBar->SetTotalAmount(currencyManager->Summarize(entryManager->GetEntries()).ToString());
 
 	connect(sideBar, &Sidebar::AddEntryClicked, this, &MainPresenter::HandleAddEntry);
+	connect(sideBar, &Sidebar::ViewEntriesClicked, this, &MainPresenter::OnViewEntriesClicked);
 	connect(mainWindow->GetEntryView(), &AddEntryView::buttonClicked, this,&MainPresenter::OnAddEntryButtonClicked);
+}
+
+void MainPresenter::OnViewEntriesClicked()
+{
+	QStackedWidget* contentStack = mainWindow->GetContentStack();
+	contentStack->setCurrentWidget(mainWindow->GetEntriesView());
 }
 
 void MainPresenter::OnAddEntryButtonClicked(const QString& Amount) {

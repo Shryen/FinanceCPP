@@ -8,7 +8,7 @@ class Sidebar;
 class QStackedWidget;
 class LoginView;
 class ChartView;
-
+class EntryView;
 
 enum class ViewPage {
 	ViewLogin,
@@ -25,6 +25,7 @@ public:
 	QStackedWidget* GetContentStack() const { return MainContentStack; }
 	LoginView* GetLoginView() const { return loginView; }
 	ChartView* GetChartView() const { return chartView; }
+	EntryView* GetEntriesView() const { return entryView; }
 
 	AddEntryView* GetEntryView() const { return EntryManagerView; }
 
@@ -40,6 +41,7 @@ private:
 	LoginView* loginView;
 	ChartView* chartView;
 	AddEntryView* EntryManagerView;
+	EntryView* entryView;
 };
 
 #endif
